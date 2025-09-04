@@ -1,8 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Andika|Boogaloo|Nunito);
 
 *{
-	background-color: #FFF9F4;
 	font-family: Andika;
+}
+body{
+	background-color: #FFF9F4;
 }
 
 h1 {	
