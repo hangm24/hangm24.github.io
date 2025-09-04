@@ -1,17 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Andika')
+@import url(https://fonts.googleapis.com/css?family=Andika);
 
-*{
-	font-family: 'Andika';
-	margin-right: auto;
-	margin-left: auto;
-}
-
-body {
-  background-color: #fff9f4;
-}
-h1 {
-  color: #1d3b4f;
-}
-p {
-  color: red;
+body{
+   font-family: 'Andika';
 }
