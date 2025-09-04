@@ -1,5 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Andika);
 
-body{
-   font-family: 'Andika';
+*{
+	margin-top: 0;
+	font-family: Andika;
+	margin-right: auto;
+	margin-left: auto;
 }
