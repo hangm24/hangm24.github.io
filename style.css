@@ -1,3 +1,10 @@
+*{
+	margin-top: 0;
+	font-family: Andika;
+	margin-right: auto;
+	margin-left: auto;
+}
+
 body {
   background-color: #fff9f4;
 }
