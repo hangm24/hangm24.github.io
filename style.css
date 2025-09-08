@@ -6,6 +6,13 @@
 }
 
 body {
+	width: min(100%,1146px);
+	background-color: #40494F;
+}
+
+div{
+	margin-right: 1px;
+	margin-left: 1px;
 	background-color: #FFF9F4;
 }
 
