@@ -3,10 +3,12 @@
 *{
 	font-family: Andika;
 	color: #1D3B4F;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 body {
-	width: min(100%,1146px);
+	width: min(100%,940px);
 	background-color: #40494F;
 }
 
