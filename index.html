@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div>
+<h1>Red Kite Teacher Training - Stage 2 Lesson Plan</h1>
+
+
+<div class="row1">
+	<div class="column1">
+		<p>Trainee: Michael Hang</p>
+	</div>
+	<div class="column1">
+		<p>Host Teacher: </p>
+	</div>
+</div>
+<div class="row1">
+	<div class="column1">
+		<p>Subject: Mathematics</p>
+	</div>
+	<div class="column1">
+		<p>Year Group: </p>
+	</div>
+</div>
+<p><input type="text" id="lesson_code" value="" size="40"><button id="loadLessonBtn" onclick="loadLesson()">Plan Lesson</button></p>
+
+<h2>Lesson Topic</h2>
+<p id="topic"></p>
+
+<h2>Learning Objective(s)</h2>
+<p id="objectives"></p>
+
+<h2>Knowledge and Understanding</h2>
+<h3>Theme</h3>
+<p id="theme"></p>
+
+
+<h3>Outcome</h3>
+<p id="outcome"></p>
+
+<h3>Required Prerequisites</h3>
+<p id="required"></p>
+
+
+<h3>Recommended Prerequisites</h3>
+<p id="recommended"></p>
+
+
+
+<h3>Establishing New Learning</h3>
+	<ul>
+		<li>Starter to recall prerequisite topics</li>
+		<li>Demonstration and Worked Example</li>
+		<li>Useful Identities and Formulae in Bubble</li>
+		<li>Practicing new knowledge through exercise and minigames</li>
+	</ul>
+
+
+
+
+<h2>Meeting the Needs of all Learners</h2>
+
+<h3>Literacy</h3>
+<p id="literacy"></p>
+
+<h3>Challenges and Model Success</h3>
+	<ul>
+		<li>Challenging Questions at the End of worksheet to extend students thinking</li>
+		<li>Worked Example provided on handout to ensure students have a correct example available</li>
+		<li>Positive Points based on students' progression milestone</li>
+	</ul>
+
+<h3>Learners with Specific Needs</h3>
+<p id="sen_info"></p>
+<p><textarea id="sen_info_in" value="" rows="10" cols="140" fontsize="13"></textarea></p>
+<p><button id="sen_btn" onclick="updatesen()">Update</button></p>
+
+
+
+<h2>Key Questions and Possible Misconceptions</h2>
+<h3>Key Questions</h3>
+<p id="key_quest"></p>
+<h3>Misconceptions</h3>
+<p id="misconceptions"></p>
+
+
+
+<h2>Organisation, Resources, Transitions and Classroom Management</h2>
+<h3>Learning Mode</h3>
+	<ul>
+		<li>Modelling</li>
+		<li>You Do I Do</li>
+		<li>Independent Practice</li>
+	</ul>
+<h3>Seating Plans</h3>
+	<ul>
+		<li>Reshuffle every half-term</li>
+		<li>Safe Location for students with ASD</li>
+		<li>Front row for students with visual needs</li>
+	</ul>
+<h3>Resources</h3>
+	<ul>
+		<li>Handout will be provided</li>
+		<li>Safe Location for students with ASD</li>
+		<li>Front row for students with visual needs</li>
+	</ul>
+<h3>Timing</h3>
+	<ul>
+		<li>Based on watch and the computer. Freezing the screen should be avoided unless there is no alternative (for example, when making new slides based on AfL identified during activities.</li>
+		<li>Disruption to Learning will result in warning, and then negative points, which will be registered on ClassChart</li>
+	</ul>
+
+
+
+<h2>Opportunities to Practise</h2>
+<h3>Application of New Learning/Practice of New Skill</h3>
+	<ul>
+		<li>Mini-Whiteboard Question: </li>
+		<li>White-Rose Worksheet on more complicated problems</li>
+	</ul>
+<h3>Scaffolding</h3>
+	<ul>
+		<li>Mini-Whiteboard Questions</li>
+		<li>White-Rose Worksheet on more complicated problems</li>
+	</ul>
+
+
+<h2>Assessment</h2>
+<h3>Progress</h3>
+	<ul>
+		<li>Starters will check if students have consolidated knowledge in previous topics</li>
+		<li>Mini Whiteboard to check if students can understand new concept</li>
+		<li>Exercise where teachers circulate the classroom and check students’ progression</li>
+	</ul>
+<h3>Feedback</h3>
+	<ul>
+		<li>Explanation based on students’ answer</li>
+		<li>Solution available for students</li>
+		<li>Talk through common mistakes</li>
+	</ul>
+
+
+<h2>Roles of Other Adults</h2>
+<h3>Host Teacher</h3>
+	<ul>
+		<li>Walk around the classroom during independent tasks or group tasks, and help out students who have questions on the topic.</li>
+		<li>Issue Warnings and Behaviour Points if any student is misbehaving. </li>
+	</ul>
+<h3>Learning Support</h3>
+	<ul>
+		<li>Help out students who are on SEN care plan and require learning support</li>
+	</ul>
+
+
+<h2>Phase of Lesson</h2>
+
+<div class="row2">
+	<div class="column2">
+		<p>Timing</p>
+	</div>
+	<div class="column2">
+		<p>Teaching</p>
+	</div>
+	<div class="column2">
+		<p>Learning</p>
+	</div>
+	<div class="column2">
+		<p>Assessment</p>
+	</div>
+</div>
+<div class="row2">
+	<div class="column2">
+		<p>4 minutes<br>Starter</p>
+	</div>
+	<div class="column2">
+		<p>Deliever the starter, provide hints to students but not giving out answer directly (praise SEN students to ensure their confidence to proceed)</p>
+	</div>
+	<div class="column2">
+		<p>Students completing the starter questions. Student may seek help if they struggle</p>
+	</div>
+	<div class="column2">
+		<p>Circulate the classroom and check students' answer, to decide if additional modelling is required</p>
+	</div>
+</div>
+<div class="row2">
+	<div class="column2">
+		<p>4 minutes<br>Starter Feedback</p>
+ 	</div>
+	<div class="column2">
+		<p>Go through the answer of the starter, provide modelling if students struggle</p>
+	</div>
+	<div class="column2">
+		<p>Students marking their answer with green pen. Responding to teachers' question when being cold called</p>
+	</div>
+	<div class="column2">
+		<p>Check students' response, award students with positives to improve engagement</p>
+	</div>
+</div>
+
+<div class="row2">
+	<div class="column2">
+		<p>8 minutes<br>Modelling</p>
+ 	</div>
+	<div class="column2">
+		<p>Explain about the concepts</p>
+	</div>
+	<div class="column2">
+		<p>Listen to teacher and copy down concept bubbles</p>
+	</div>
+	<div class="column2">
+		<p>Check students' response, award students with positives to improve engagement</p>
+	</div>
+</div>
+<div class="row2">
+	<div class="column2">
+		<p>4 minutes<br>Mini Whiteboard Question</p>
+ 	</div>
+	<div class="column2">
+		<p>Put the questions on the board. If students struggle, provide more detailed explanation. Post following up questions if necessary</p>
+	</div>
+	<div class="column2">
+		<p>Work out the mini-whiteboard question and write the answer on the board</p>
+	</div>
+	<div class="column2">
+		<p>Check students' response, award students with positives to improve engagement. Re-assessment if students struggle and time allowed</p>
+	</div>
+</div>
+<div class="row2">
+	<div class="column2">
+		<p>16 minutes<br>Independent Task</p>
+ 	</div>
+	<div class="column2">
+		<p>Provide Hints to students who struggle with the questions.</p>
+		<p>Live-Mark students' answer and give out positive points base on their progression</p>
+	</div>
+	<div class="column2">
+		<p>Complete the worksheet</p>
+	</div>
+	<div class="column2">
+		<p>Check students' response, award students with positives to improve engagement</p>
+	</div>
+</div>
+<div class="row2">
+	<div class="column2">
+		<p>4 minutes<br>Checking Answers</p>
+ 	</div>
+	<div class="column2">
+		<p>Provide hints to students who struggle with the questions.</p>
+		<p>Live-Mark students' answer and give out positive points base on their progression</p>
+	</div>
+	<div class="column2">
+		<p>Mark their answer with green pen</p>
+	</div>
+	<div class="column2">
+		<p>Circulate the classroom to check students are checking the answer</p>
+		<p>Go through challenging questions</p>
+	</div>
+</div>
+<div class="row2">
+	<div class="column2">
+		<p>5 minutes<br>Plenaries</p>
+ 	</div>
+	<div class="column2">
+		<p>Host Minigame</p>
+		<p>Explain on challenging questions if necessary</p>
+	</div>
+	<div class="column2">
+		<p>Complete the minigame as instructed by the teacher</p>
+	</div>
+	<div class="column2">
+		<p>Check students' response, award students with positives to improve engagement</p>
+	</div>
+</div>
+
+<div class="row2">
+</div>
+<h2>Additional Information / Adjustment</h2>
+<p id="add_info"></p>
+<p><textarea id="add_info_in" value="" rows="10" cols="140" fontsize="13"></textarea></p>
+<p><button id="add_info_btn" onclick="addinfo()">Update</button></p>
+
+</div>
+
+<script>
+function updatesen() {
+	document.getElementById("sen_info").innerHTML = document.getElementById("sen_info_in").value;
+	document.getElementById("sen_info_in").remove();
+	document.getElementById("sen_btn").remove();
+}
+function addinfo() {
+	document.getElementById("add_info").innerHTML = document.getElementById("add_info_in").value;
+	document.getElementById("add_info_in").remove();
+	document.getElementById("add_info_btn").remove();
+}
+
+
+function loadLesson() {
+	if (document.getElementById("lesson_code").value == "M462") {
+		document.getElementById("topic").innerHTML = "Divisibility";
+		document.getElementById("objectives").innerHTML = "- Understand what is an exact division of an integer <br> - Apply the divisibility rules on integers.";
+		document.getElementById("theme").innerHTML = "Number";
+		document.getElementById("outcome").innerHTML = "Able to determine the divisibility of an integer, as a basis for identifying factors";
+		document.getElementById("required").innerHTML = "Understanding Integers (Q976)";
+		document.getElementById("recommended").innerHTML = "Use a written method to divide integers (M354)";
+		document.getElementById("literacy").innerHTML = "Key Vocabularies: Integer, Remainder, Divisibility";
+		document.getElementById("key_quest").innerHTML = "- How do we determine the number is divisible by 5 & 10? <br> - How do we determine a number is divisible by 4 & 8? <br> - How do we determine a number is divisible by 3, 6 & 9?";
+	} 
+
+	if (document.getElementById("lesson_code").value == "M823") {
+		document.getElementById("topic").innerHTML = "Finding factors & using divisibility tests";
+		document.getElementById("objectives").innerHTML = "- Understand what is a factor <br> - Apply the divisibility rules to identify factors.";
+		document.getElementById("theme").innerHTML = "Number";
+		document.getElementById("outcome").innerHTML = "Able to identify factors of an integer";
+		document.getElementById("required").innerHTML = "Divisibility (M462); Understanding Integers (Q976)";
+		document.getElementById("recommended").innerHTML = "Use a written method to divide integers (M354)";
+		document.getElementById("literacy").innerHTML = "Key Vocabularies: Integer, Remainder, Divisibility, Factor";
+		document.getElementById("key_quest").innerHTML = "- What is a factor? <br> - How do we identify all the factor pairs of an integer?";
+	} 
+
+}
+</script>
+
+</body>
+</html>
