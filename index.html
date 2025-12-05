@@ -1,0 +1,30 @@
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+	    <title>Drawing with the Mouse</title>
+	</head>
+
+<body>
+
+<div id="canvas_div">
+<canvas id="drawing_canvas" width="970" height="550"></canvas>
+<br>
+<button onclick="javascript:clearArea();return false;">Clear Area</button>
+Line width : <select id="selWidth">
+    <option value="11">11</option>
+    <option value="13" selected="selected">13</option>
+    <option value="15">15</option>
+</select>
+Color : <select id="selColor">
+    <option value="black">black</option>
+    <option value="blue" selected="selected">blue</option>
+    <option value="red">red</option>
+    <option value="green">green</option>
+    <option value="yellow">yellow</option>
+    <option value="gray">gray</option>
+</select>
+</div>
+
+<script src="key_mouse.js"></script>
+</body>
+</html>

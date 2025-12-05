@@ -1,0 +1,34 @@
+@import url(https://fonts.googleapis.com/css?family=Andika|Boogaloo|Nunito);
+
+*{
+	font-family: Andika;
+	color: #1D3B4F;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+body {
+	width: max(970px,70%);
+	background-color: #353739;
+}
+
+div{
+	border-radius: 3px;
+	background-color: #F2E8DF;
+}
+
+h1 {	
+	font-size: 3.6vw;
+	text-align: center;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+canvas {
+	background-color: #FFF9F4;
+	border-radius: 5px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
