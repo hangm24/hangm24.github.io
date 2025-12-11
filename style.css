@@ -3,8 +3,6 @@
 *{
 	font-family: Andika;
 	color: #1D3B4F;
-	margin-right: auto;
-	margin-left: auto;
 }
 
 body {
@@ -39,3 +37,4 @@ canvas {
 	position: absolute;
 	bottom: 1em;
 }
+
