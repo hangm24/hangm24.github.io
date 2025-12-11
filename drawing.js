@@ -105,10 +105,16 @@ for (const ev of ['touchmove', 'mousemove']) {
 			}
 			x = e.touches[0].pageX * 2
 			y = e.touches[0].pageY * 2
+			$touches.innerHTML = `
+				touchType = ${touch.touchType} ${touch.touchType === 'direct' ? '👆' : '✍️'} <br/>
+			`
 		} else {
 			pressure = 1.0
 			x = e.pageX * 2
 			y = e.pageY * 2
+			$touches.innerHTML = `
+				touchType = Mouse 🐁 <br/>
+			`
 		}
 
 		// smoothen line width
