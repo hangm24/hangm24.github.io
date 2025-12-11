@@ -105,16 +105,10 @@ for (const ev of ['touchmove', 'mousemove']) {
 			}
 			x = e.touches[0].pageX * 2
 			y = e.touches[0].pageY * 2
-			$touches.innerHTML = `
-				touchType = ${touch.touchType} ${touch.touchType === 'direct' ? '👆' : '✍️'} <br/>
-			`
 		} else {
 			pressure = 1.0
 			x = e.pageX * 2
 			y = e.pageY * 2
-			$touches.innerHTML = `
-				touchType = Mouse 🐁 <br/>
-			`
 		}
 
 		// smoothen line width
@@ -127,7 +121,7 @@ for (const ev of ['touchmove', 'mousemove']) {
 			$force.textContent = 'force = ' + pressure
 
 			const touch = e.touches ? e.touches[0] : null
-			if (e.touches[0]["force"] > 0){
+			if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 				$touches.innerHTML = `
 					touchType = ${touch.touchType} ${touch.touchType === 'direct' ? '👆' : '✍️'} <br/>
 				`
