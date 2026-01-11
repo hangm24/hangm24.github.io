@@ -1,0 +1,55 @@
+input[type="radio"] {
+	font-family: sans-serif;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	text-align: center;
+	font-size: 11px;
+	background-color: #990000;
+	transition: 250ms;
+}
+
+input[type="radio"]:before {
+	content: "✖";
+}
+
+
+input[type="radio"]:checked:before {
+	content: "✔";
+}
+
+input[type="radio"]:checked {
+	background-color: #008800;
+}
+
+input[type="checkbox"] {
+	font-family: sans-serif;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	text-align: center;
+	font-size: 11px;
+	background-color: #990000;
+	transition: 250ms;
+}
+
+input[type="checkbox"]:before {
+	content: "✖";
+}
+
+input[type="checkbox"]:indeterminate:before {
+	content: "➖";
+}
+input[type="checkbox"]:indeterminate {
+	background-color: #DDAA00;
+}
+
+input[type="checkbox"]:checked:before {
+	content: "✔";
+}
+
+input[type="checkbox"]:checked {
+	background-color: #008800;
+}
