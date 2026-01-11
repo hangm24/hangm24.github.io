@@ -26,14 +26,12 @@ canvas {
 }
 
 #controls {
-	font-size: 1vw;
+	font-size: 1.1vw;
 	z-index: 1;
 	position: absolute;
-	bottom: 2%;
+	bottom: 2.2%;
 	background: #99BBEE;
 	opacity: 0.92;
 	padding: 0.2%;
 	border-radius: 0.2em;
 }
-
-
