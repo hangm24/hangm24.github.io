@@ -16,8 +16,19 @@
 	<div id="touches"></div>
 	<canvas>Sorry, your browser is too old for this demo.</canvas>
 	<div id="controls">
-		<a href="https://github.com/quietshu/apple-pencil-safari-api-test" target="_blank">GitHub</a>
-		<button onclick="undoDraw()">Undo</button>
+		Hello
+		<input type="text" id="commandline" placeholder="[Please Enter to Chat]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Chat]'">
+		<button id="hand" disabled>🖐</button>
+		<button id="pencil">🖊️</button>
+		<button id="highlighter">🖍️</button>
+		<input id="palette" name='stroke' type="color" value="#580D8B">
+		<input id="lineWidthIn" name='lineWidth' type="number" value="6">
+		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
+		<button id="smoothen">∿</button>
+		<button id="straighten">╱</button>
+		<button id="undo" onclick="undoDraw()">↺ </button>
+		<button id="clear">🆑</button>
+		<button id="displayconsole">ℹ️</button>
 	</div>
 </body>
 
