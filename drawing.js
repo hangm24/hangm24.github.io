@@ -66,7 +66,7 @@ function undoDraw () {
 for (const ev of ["touchstart", "mousedown"]) {
 	canvas.addEventListener(ev, function (e) {
 		if (document.querySelector('#stylusonly').checked){
-			if (e.touches[0].touchType.toString !== 'stylus') {
+			if (e.touches[0].touchType === 'direct' || e.touches[0]["force"] === "undefined") {
 				return;
 			}
 		}
@@ -98,7 +98,7 @@ for (const ev of ['touchmove', 'mousemove']) {
 	canvas.addEventListener(ev, function (e) {
 		if (!isMousedown) return
 		if (document.querySelector('#stylusonly').checked){
-			if (e.touches[0].touchType.toString !== 'stylus') {
+			if (e.touches[0].touchType === 'direct' || e.touches[0]["force"] === "undefined") {
 				return;
 			}
 		}
