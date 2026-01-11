@@ -65,14 +65,8 @@ function undoDraw () {
 
 for (const ev of ["touchstart", "mousedown"]) {
 	canvas.addEventListener(ev, function (e) {
-		if (document.querySelector('#stylusonly').checked === true){
-			if (evt.touches && evt.touches[0] && typeof evt.touches[0]["force"] !== "undefined"){
-				if (touch.touchType !== 'stylus'){
-					return; //Return if direct touch
-				}
-			} else {
-				return; //Return if mouse
-			}
+		if (document.querySelector('#stylusonly').checked === true && touch.touchType !== 'stylus'){
+			return;
 		}
 		let pressure = 0.1;
 		let x, y;
@@ -101,14 +95,8 @@ for (const ev of ["touchstart", "mousedown"]) {
 for (const ev of ['touchmove', 'mousemove']) {
 	canvas.addEventListener(ev, function (e) {
 		if (!isMousedown) return
-		if (document.querySelector('#stylusonly').checked === true){
-			if (evt.touches && evt.touches[0] && typeof evt.touches[0]["force"] !== "undefined"){
-				if (touch.touchType !== 'stylus'){
-					return; //Return if direct touch
-				}
-			} else {
-				return; //Return if mouse
-			}
+		if (document.querySelector('#stylusonly').checked === true && touch.touchType !== 'stylus'){
+			return;
 		}
 		e.preventDefault()
 
