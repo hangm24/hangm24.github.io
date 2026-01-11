@@ -69,6 +69,9 @@ for (const ev of ["touchstart", "mousedown"]) {
 			if (e.touches[0].touchType === 'direct') {
 				return;
 			}
+			if (e.touches[0].radiusX != 0 && e.touches[0].radiusY != 0){
+				return;
+			}
 		}
 		let pressure = 0.1;
 		let x, y;
@@ -99,6 +102,9 @@ for (const ev of ['touchmove', 'mousemove']) {
 		if (!isMousedown) return
 		if (document.querySelector('#stylusonly').checked){
 			if (e.touches[0].touchType === 'direct') {
+				return;
+			}
+			if (e.touches[0].radiusX != 0 && e.touches[0].radiusY != 0){
 				return;
 			}
 		}
