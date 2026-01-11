@@ -14,7 +14,7 @@ body {
 h6 {
 	margin-top: 0;
 	opacity: 0.6;
-	font-size: 1vw;
+	font-size: max(14px,2vh);
 }
 
 canvas {
@@ -26,11 +26,11 @@ canvas {
 }
 
 #controls {
-	font-size: 1.1vw;
 	z-index: 1;
 	position: absolute;
-	bottom: 2.2%;
+	bottom: 2.5%;
 	background: #99BBEE;
+	font-size: max(14px,2vh);
 	opacity: 0.92;
 	padding: 0.2%;
 	border-radius: 0.2em;
