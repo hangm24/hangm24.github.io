@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Reflection Form</title>
+	<style>
+		*{font-size: 1.5vw;font-family: Verdana;color: #1D3B4F;}
+		body {padding-left: 6%;padding-right: 6%;background-color: #454059;margin-right: auto;margin-left: auto;}
+		div.container {padding: 1px;border-radius: 3px;background-color: #FBF1E9;}
+		a {text-decoration: none;}
+		div.classrow {padding-top: 1%;padding-bottom: 1%;border-bottom-style: solid;content: "";clear: both;}
+		div.classcol {display:inline-block;width: 48%;padding-left: 0.6%;}
+		h1 {padding: 1.2vw;font-size: 2.4vw;text-align: center;border-radius: 3px;background-color: #144162;color: #F0E1D4;margin: 0;padding-left: 0.4%;}
+		h2 {font-weight: bold;font-size: 1.5vw;margin-left: 0;margin-right: 0;margin-top: 0;margin-bottom: 0.1vw;padding-left: 0.4%;}
+		p {margin-left: 0;margin-right: 0;margin-top: 0;margin-bottom: 0.4vw;line-height: 3vw;padding-left: 0.4%;}
+		p.guide {font-family: monospace;font-size: 1vw;line-height: 1.7vw;color: #557733;}
+		textarea {line-height: 2vw}
+	</style>
+</head>
+<body>
+<div class="navbar" id="navbar">
+	<select id="classin">
+		<option value="default">&nbspPick a Class</option>
+		<option value="PSHE">&nbsp09A/Pc8 </option>
+		<option value="10B4">&nbsp10B/Ma4 </option>
+		<option value="07A2">&nbsp07A/Ma2 </option>
+		<option value="08C1">&nbsp08C/Ma1 </option>
+		<option value="09C2">&nbsp09C/Ma2 </option>
+	</select>
+	<input type="date" id="datein">
+	<select id="periodin">
+		<option value="Default">&nbspPick the period of the day </option>
+		<option value="Period 1">&nbspPeriod&nbsp1&nbsp 08:50 - 09:50 </option>
+		<option value="Period 2">&nbspPeriod&nbsp2&nbsp 09:50 - 10:50 </option>
+		<option value="Period 3">&nbspPeriod&nbsp3&nbsp 11:10 - 12:10 </option>
+		<option value="Period 4">&nbspPeriod&nbsp4&nbsp 12:10 - 13:10 </option>
+		<option value="Period 5c">&nbspPeriod&nbsp5&nbsp 13:50 - 14:50 </option>
+		<option value="Period 5d">&nbspPeriod&nbsp5&nbsp 13:50 - 14:55 </option>
+	</select>
+</div>
+<div class="container"> <!-- Opening of Yellow -->
+	<a href="about:blank" class="heading" id="heading" onclick="return false"><h1>Lesson Evaluation Reflection Form</h1></a>
+	<div class="classrow">
+		<div class="classcol">
+			Trainee: MHN
+		</div>
+		<div class="classcol">
+			Class: <label id="classcode"></label>
+		</div>
+	</div>
+	<div class="classrow">
+		<div class="classcol">
+			Date: <label id="lessondate"></label>
+		</div>
+		<div class="classcol">
+			Time: <label id="timeperiod"></label>
+		</div>
+	</div>
+	<p>Reflecting on your practice is a key skill you need to develop over the course of your training year. This is a thought process that all effective practitioners follow after teaching lessons to enable them to identify what has worked and why and what didn't work quite as well and why. They then use this to inform their future planning.</p>
+	<br>
+	<h2>What went well and why?</h2>
+	<p class="guide">Identify positive aspects of the lesson, e.g. timings, pupil engagement, your own subject knowledge, pupil progress etc.</p>
+	<p class="output" id="str_out"></p>
+	<textarea id="strength" value="" rows="10" cols="90"></textarea>
+	<br>
+	<br>
+	<h2>Impact on pupil progress and meeting the needs of all learners:</h2>
+	<p class="guide">What did the pupils know at the end that they didn't know at the start? What could they do at the end that they couldn't do at the start? Could all children access the lesson? If so, why? If not, why?</p>
+	<p class="output" id="imp_out"></p>
+	<textarea id="impact" value="" rows="10" cols="90"></textarea>
+	<br>
+	<br>
+	<h2>What could you do differently? How would this promote pupil progress?</h2>
+	<p class="guide">Consider teaching and learning activities, timings, resources and pupil groupings, behaviour management, etc.</p>
+	<p class="output" id="tgt_out"></p>
+	<textarea id="target" value="" rows="10" cols="90"></textarea>
+	<br>
+	<br>
+</div> 
+<script>
+const $webtitle = document.querySelector('title');
+const $classin = document.querySelector("#classin");
+const $classcode = document.querySelector('#classcode');
+const $datein = document.querySelector("#datein");
+const $lessondate = document.querySelector("#lessondate");
+const $timeperiod = document.querySelector("#timeperiod");
+const $strength = document.querySelector("#strength");
+const $impact = document.querySelector("#impact");
+const $target = document.querySelector("#target");
+var inputdate;
+var navbarstate = true;
+
+function updatetitle(){
+	$webtitle.innerText = '[' + $classcode.innerText + "] " + " Lesson Reflection ";
+	if ((inputdate) && (inputdate.toString() !== "Invalid Date")) {
+		$webtitle.innerText += inputdate.toLocaleDateString();
+	}
+}
+navbar.addEventListener('change', evt => {
+	if(evt.target.id === 'classin') {
+		if (evt.target.value == "PSHE"){
+			$classcode.innerText = "09A/Pc8";
+		} else if (evt.target.value == "10B4"){
+			$classcode.innerText = "10B/Ma4";
+		} else if (evt.target.value == "07A2"){
+			$classcode.innerText = "07A/Ma2";
+		} else if (evt.target.value == "08C1"){
+			$classcode.innerText = "08C/Ma1";
+		} else if (evt.target.value == "09C2"){
+			$classcode.innerText = "09C/Ma2";
+		} else {
+			$classcode.innerText = "";
+		}
+	updatetitle();
+	}
+	if(evt.target.id === 'datein') {
+		inputdate = new Date(document.querySelector("#datein").value);
+		if (inputdate.getDay() == 0) {
+			weekday = "Sunday";
+		} else if (inputdate.getDay() == 1) {
+			weekday = "Monday";
+		} else if (inputdate.getDay() == 2) {
+			weekday = "Tuesday";
+		} else if (inputdate.getDay() == 3) {
+			weekday = "Wednesday";
+		} else if (inputdate.getDay() == 4) {
+			weekday = "Thursday";
+		} else if (inputdate.getDay() == 5) {
+			weekday = "Friday";
+		} else if (inputdate.getDay() == 6) {
+			weekday = "Saturday";
+		} else {
+			weekday = "";
+		}
+		if ((inputdate) && (inputdate.toString() !== "Invalid Date")) {
+			$lessondate.innerText = inputdate.toLocaleDateString() + ' ' + weekday;
+		} else {
+			$lessondate.innerText = "";
+		}
+	}
+	if(evt.target.id === 'periodin') {
+		document.getElementById("timeperiod").innerText = evt.target.options[evt.target.selectedIndex].innerText.slice(1);
+	}
+	updatetitle();
+});
+heading.addEventListener('click', evt => {
+	updatetitle();
+	if(navbarstate === true) {
+		document.getElementById("navbar").style.display = "none";
+		$strength.style.display = "none";
+		$impact.style.display = "none";
+		$target.style.display = "none";
+		document.getElementById("str_out").innerHTML = $strength.value.replaceAll('\n',"<br>");
+		document.getElementById("imp_out").innerHTML = $impact.value.replaceAll('\n',"<br>");
+		document.getElementById("tgt_out").innerHTML = $target.value.replaceAll('\n',"<br>");
+		$strength.value = "";
+		$impact.value = "";
+		$target.value = "";
+		navbarstate = false;
+	} else {
+		document.getElementById("navbar").style.display = "block";
+		$strength.value = document.getElementById("str_out").innerHTML.replaceAll("<br>",'\n');
+		$impact.value = document.getElementById("imp_out").innerHTML.replaceAll("<br>",'\n');
+		$target.value = document.getElementById("tgt_out").innerHTML.replaceAll("<br>",'\n');
+		document.getElementById("str_out").innerHTML = "";
+		document.getElementById("imp_out").innerHTML = "";
+		document.getElementById("tgt_out").innerHTML = "";
+		$strength.style.display = "block";
+		$impact.style.display = "block";
+		$target.style.display = "block";
+		navbarstate = true;
+	}
+});
+</script>
+</body>
+</html>
