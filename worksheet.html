@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Worksheet</title>
+<style>
+@import url(https://fonts.googleapis.com/css?family=Andika|Boogaloo|Nunito);
+* {
+
+	color: #1D3B4F;
+}
+
+body {
+	vertical-align:top;
+	font-family: Andika;
+	font-size: 14px;
+	background-color: #454059;
+}
+
+div.paper{
+	width: 71em;
+	padding: 0.1em;
+	border-radius: 0.1em;
+	border-left: 4em;
+	border-right: 4em;
+	border-left-style: solid;
+	border-right-style: solid;
+	border-color: #F3F0F7;
+	background-color: #FBF1E9;
+  	column-count: 2;
+ 	column-height: 55.5em;
+	column-fill: auto;
+	column-gap: 1em;
+	column-rule-style: solid;
+	column-rule-width: 1px;
+	column-rule-color: #E4DAF2;
+
+}
+
+h1 {
+	font-size: 21px;
+	font-family: Boogaloo;
+	text-align: center;
+	font-weight: normal;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+h2 {
+	font-size: 16px;
+	text-decoration: underline;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+p {
+	vertical-align: baseline;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	text-align: justify;
+}
+div.table1 {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+div.t1num {
+	display: inline-block;
+	width: 1.5em;
+}
+div.t1cont {
+	display: inline-block;
+	width: 29em;
+	text-align: justify;
+}
+div.table2 {
+	padding-left: 2rem;
+	padding-right: 1rem;
+  	column-count: 2;
+ 	column-height: 10rem;
+}
+div.t2num {
+	display: inline-block;
+	width: 1.5em;
+}
+div.t2cont {
+	display: inline-block;
+	width: 13em;
+	text-align: justify;
+}
+
+div.table3 {
+	padding-left: 2rem;
+	padding-right: 1rem;
+  	column-count: 3;
+ 	column-height: 2rem;
+}
+div.t3num {
+	display: inline-block;
+	width: 1.5em;
+}
+div.t3cont {
+	display: inline-block;
+	width: 7em;
+}
+
+div.table4 {
+	padding-left: 2rem;
+	padding-right: 1rem;
+  	column-count: 4;
+ 	column-height: 1rem;
+}
+div.t4num {
+	display: inline-block;
+	width: 1.5em;
+}
+div.t4cont {
+	display: inline-block;
+	width: 5em;
+}
+label.eqn {
+	vertical-align:baseline;
+}
+label.frac {
+	vertical-align:baseline;
+	font-size: 1.5em;
+}
+</style>
+
+<script>
+	MathJax = {
+		tex: {
+			inlineMath: {'[+]': [['#', '#']]}
+  		}
+	};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+
+</head>
+
+<body>
+<div class="paper">
+	<h1 id="wstitle" >Worksheet Topic</h1>
+	<h2>Sub-Topic</h2>
+
+<div class="table1">
+	<div class="t1num">
+		1.
+	</div>
+	<div class="t1cont">
+		Question 1
+	</div>
+</div>
+
+<div class="table2" style="column-height: 10rem">
+	<div class="t2num">
+		a)
+	</div>
+	<div class="t2cont">
+		Block A
+	</div>
+	<div class="t2num">
+		b)
+	</div>
+	<div class="t2cont">
+		Block B
+	</div>
+	<div class="t2num">
+		c)
+	</div>
+	<div class="t2cont">
+		Block C
+	</div>
+	<div class="t2num">
+		d)
+	</div>
+	<div class="t2cont">
+		Block D
+	</div>
+
+</div>
+
+<div class="table3" style="column-height: 1rem">
+	<div class="t3num">
+		a)
+	</div>
+	<div class="t3cont">
+		Block A
+	</div>
+	<div class="t3num">
+		b)
+	</div>
+	<div class="t3cont">
+		Block B
+	</div>
+	<div class="t3num">
+		c)
+	</div>
+	<div class="t3cont">
+		Block C
+	</div>
+
+</div>
+<br>
+<br>
+<br>
+
+<div class="table4" style="column-height: 1rem">
+	<div class="t4num">
+		a)
+	</div>
+	<div class="t4cont">
+		Block A
+	</div>
+	<div class="t4num">
+		b)
+	</div>
+	<div class="t4cont">
+		Block B
+	</div>
+	<div class="t4num">
+		c)
+	</div>
+	<div class="t4cont">
+		Block C
+	</div>
+	<div class="t4num">
+		d)
+	</div>
+	<div class="t4cont">
+		Block D
+	</div>
+
+</div>
+
+<br>
+<br><br>
+<p><label class="frac">\binom{n}{k}</label></p>
+<p><label class="frac">\frac{x}{a}</label></p>
+<p><label class="eqn">\sqrt[3]{x}</label></p>
+<p><label class="eqn">\sqrt{5}</label></p>
+<p><label class="eqn">2^{x}</label></p>
+<p><label class="eqn">30°</label></p>
+<p>Calculate <label class="frac">\int_{a}^{b}</label><label class="eqn">xdx</label></p>
+<p>Calculate <label class="frac">\left. \frac{df}{dx} \right|_{x=0}</label></p>
+<p>Laplace <label class="eqn">\mathcal{L}</label></p>
+<p>Integer <label class="eqn">\mathbb{Z}</label></p>
+<p>Combination <label class="eqn">C\begin{matrix}5\\2\end{matrix}</label></p>
+<p>Matrix <label class="eqn">\begin{bmatrix}1 & 2 & 3\\a & b & c\end{bmatrix}</label></p>
+<p>Determinant <label class="eqn">\begin{vmatrix}1 & 2\\a & b\end{vmatrix}</label></p>
+
+</div><!-- End of Paper -->
+
+
+<script>
+	const $webtitle = document.querySelector("title");
+	const $wstitle = document.querySelector("#wstitle");
+	const $eqns = document.querySelectorAll(".eqn");
+	const $fracs = document.querySelectorAll(".frac");
+	$webtitle.innerHTML = $wstitle.innerText;
+	$eqns.forEach($eqn => $eqn.innerHTML = "#"+ $eqn.innerHTML +"#");
+	$fracs.forEach($frac => $frac.innerHTML = "#"+ $frac.innerHTML +"#");
+</script>
+
+</body>
+</html>
