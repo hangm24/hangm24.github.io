@@ -4,19 +4,141 @@
 
 <style>
 body {
-	background-color: black;
+	display: flex;
+	background-color: #454059;
+	margin-left:auto;
+	margin-right:auto;
+	justify-content: center;
+	align-items: center;
 }
-div {
-	width: 965px;
-	height: 560px;
+
+div.slide {
+	display: none;
+	height: min(100vh,58vw);
+	width: min(172.3vh,100vw);
 	background-color: #FFF9F4;
 }
 </style>
 
 </head>
 <body>
-<div>
+<!--SLIDE 00-->
+<div class="slide">
+<output id="output1" data-step="0">Hello</output>
+<output id="output1" data-step="1">Hello2</output>
 </div>
+
+<!--SLIDE 01-->
+<div class="slide">
+<div id="output2" data-step="0">Boo</div>
+<div id="output3" data-step="1" style="display:none">Boo2</div>
+</div>
+
+<!--SLIDE 02-->
+<div class="slide">
+<output id="output4" data-step="0">BooHoo</output>
+</div>
+
+<!--THE END-->
+<script>
+/*
+const $output1 = document.querySelector("#output1");
+
+document.onkeyup = function (e) {
+	$output1.innerText = "The key id is " + e.keyCode;
+}
+*/
+var currentSlide = 0;
+var currentStep = 0;
+var maxStep = 0;
+const slides = Array.from(document.getElementsByClassName("slide"));
+
+
+window.addEventListener("beforeunload", function (evt) {
+	evt.preventDefault();
+	evt.returnValue = "";
+});
+
+slides[0].style.display = "block";
+slides[0].childNodes.forEach(childNode => {
+	if (childNode.nodeType === 1){
+		maxStep = Math.max(maxStep,parseInt(childNode.dataset.step));
+		if (parseInt(childNode.dataset.step) === 0) {
+			childNode.style.display = "";
+		} else {
+			childNode.style.display = "none";
+		}
+	}
+})
+
+
+window.onkeyup = function (e) {
+	if (e.keyCode === 107){
+		if (confirm("Add a new slide?")) {
+			const newSlide = document.createElement("div");
+			newSlide.classList.add("slide");
+			newSlide.setAttribute("class", "slide");
+			slides[currentSlide].parentNode.insertBefore(newSlide,slides[currentSlide+1]);
+			slides.splice(currentSlide+1,0,newSlide);
+			slides[currentSlide].style.display = "none";
+			slides[currentSlide+1].style.display = "block";
+			currentSlide +=1;
+			currentStep = 0;
+			maxStep = 0;
+		}
+	}	
+	if ([34,39,40].includes(e.keyCode)){
+		if (currentStep < maxStep) {
+			slides[currentSlide].childNodes.forEach(childNode => {
+				if (childNode.nodeType === 1){
+					if (currentStep === parseInt(childNode.dataset.step)-1) childNode.style.display = "";
+				}
+			})
+			currentStep += 1;
+		} else if (currentSlide < slides.length - 1) {
+			slides[currentSlide].style.display = "none";
+			slides[currentSlide+1].style.display = "block";
+			currentSlide +=1;
+			currentStep = 0;
+			maxStep = 0;
+			slides[currentSlide].childNodes.forEach(childNode => {
+				if (childNode.nodeType === 1){
+					maxStep = Math.max(maxStep,parseInt(childNode.dataset.step));
+					if (parseInt(childNode.dataset.step) === 0) {
+						childNode.style.display = "";
+					} else {
+						childNode.style.display = "none";
+					}
+				}
+			})
+		}
+	}
+	if ([33,37,38].includes(e.keyCode)){
+		if (currentStep > 0) {
+			slides[currentSlide].childNodes.forEach(childNode => {
+				if (childNode.nodeType === 1){
+					if (currentStep === parseInt(childNode.dataset.step)) childNode.style.display = "none";
+				}
+			})
+			currentStep -= 1;
+		} else if (currentSlide > 0) {
+			slides[currentSlide].style.display = "none";
+			slides[currentSlide-1].style.display = "block";
+			currentSlide -=1;
+			maxStep = 0;
+			slides[currentSlide].childNodes.forEach(childNode => {
+				if (childNode.nodeType === 1){
+					maxStep = Math.max(maxStep,parseInt(childNode.dataset.step));
+				}
+			})
+			currentStep = maxStep;
+		}
+	}
+}
+
+
+
+</script>
 
 </body>
 </html>
