@@ -46,7 +46,7 @@ canvas {
 </head>
 
 <body>
-	<canvas>Sorry, your browser is too old for the canvas.</canvas>
+	<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
 
 	<div id="controls">
 		Hello
@@ -67,17 +67,15 @@ canvas {
 <script src="radiocheck.js"></script>
 <script>
 
-const $force = document.querySelectorAll('#force')[0]
-const $touches = document.querySelectorAll('#touches')[0]
-const canvas = document.querySelectorAll('canvas')[0]
-const context = canvas.getContext('2d')
+const cvs = document.getElementById("cvs")
+const ctx = cvs.getContext('2d')
 let lineWidth = 0
 let isMousedown = false
 let points = []
 const xmax = 1852;
 const ymax = 1080;
-canvas.width = xmax;
-canvas.height = ymax;
+cvs.width = xmax;
+cvs.height = ymax;
 let xoff=0;
 let yoff=0;
 
@@ -91,26 +89,26 @@ const requestIdleCallback = window.requestIdleCallback || function (fn) { setTim
  * @return {void}
  */
 function drawOnCanvas (stroke) {
-	context.strokeStyle = 'black'
-	context.lineCap = 'round'
-	context.lineJoin = 'round'
+	ctx.strokeStyle = 'black'
+	ctx.lineCap = 'round'
+	ctx.lineJoin = 'round'
 
 	const l = stroke.length - 1
 	if (stroke.length >= 3) {
 		const xc = (stroke[l].x + stroke[l - 1].x) / 2
 		const yc = (stroke[l].y + stroke[l - 1].y) / 2
-		context.lineWidth = stroke[l - 1].lineWidth
-		context.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc)
-		context.stroke()
-		context.beginPath()
-		context.moveTo(xc, yc)
+		ctx.lineWidth = stroke[l - 1].lineWidth
+		ctx.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc)
+		ctx.stroke()
+		ctx.beginPath()
+		ctx.moveTo(xc, yc)
 	} else {
 		const point = stroke[l];
-		context.lineWidth = point.lineWidth
-		context.strokeStyle = point.color
-		context.beginPath()
-		context.moveTo(point.x, point.y)
-		context.stroke()
+		ctx.lineWidth = point.lineWidth
+		ctx.strokeStyle = point.color
+		ctx.beginPath()
+		ctx.moveTo(point.x, point.y)
+		ctx.stroke()
 	}
 }
 
@@ -120,12 +118,12 @@ function drawOnCanvas (stroke) {
  */
 function undoDraw () {
 	strokeHistory.pop()
-	context.clearRect(0, 0, canvas.width, canvas.height)
+	ctx.clearRect(0, 0, cvs.width, cvs.height)
 
 	strokeHistory.map(function (stroke) {
 		if (strokeHistory.length === 0) return
 
-		context.beginPath()
+		ctx.beginPath()
 
 		let strokePath = [];
 		stroke.map(function (point) {
@@ -136,7 +134,7 @@ function undoDraw () {
 }
 
 for (const ev of ["touchstart", "mousedown"]) {
-	canvas.addEventListener(ev, function (e) {
+	cvs.addEventListener(ev, function (e) {
 		if (document.querySelector('#stylusonly').checked){
 			if (e.touches[0].touchType === 'direct') {
 				return;
@@ -165,7 +163,7 @@ for (const ev of ["touchstart", "mousedown"]) {
 		isMousedown = true
 
 		lineWidth = Math.log(pressure + 1) * 40
-		context.lineWidth = lineWidth// pressure * 50;
+		ctx.lineWidth = lineWidth// pressure * 50;
 
 		points.push({ x, y, lineWidth })
 		drawOnCanvas(points)
@@ -173,7 +171,7 @@ for (const ev of ["touchstart", "mousedown"]) {
 }
 
 for (const ev of ['touchmove', 'mousemove']) {
-	canvas.addEventListener(ev, function (e) {
+	cvs.addEventListener(ev, function (e) {
 		if (!isMousedown) return
 		if (document.querySelector('#stylusonly').checked){
 			if (e.touches[0].touchType === 'direct') {
@@ -227,7 +225,7 @@ for (const ev of ['touchmove', 'mousemove']) {
 }
 
 for (const ev of ['touchend', 'touchleave', 'mouseup']) {
-	canvas.addEventListener(ev, function (e) {
+	cvs.addEventListener(ev, function (e) {
 		let pressure = 0.1;
 		let x, y;
 
