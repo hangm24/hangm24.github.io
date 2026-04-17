@@ -1,0 +1,501 @@
+<!DOCTYPE html>	
+<html lang="en">
+
+
+<link rel="stylesheet" href="radiocheck.css">
+<style>
+body {
+	position: absolute;
+	display:flex;
+	margin: 0;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	font-family: sans-serif;
+	font-size: 13px;
+	padding: 1em;
+	box-sizing: border-box;
+	justify-content: center; 
+	align-items: center
+}
+
+div.layer-top {justify-content: center; align-items: center}
+canvas {
+	background-color: #FFF9F4;
+
+	height: min(98vh,57vw);
+	width: min(172vh,98.6vw);
+}
+
+#navbar {
+	z-index: 1;
+	position: absolute;
+	bottom: 2.5%;
+	background: #99BBEE;
+	font-size: max(14px,2vh);
+	opacity: 0.92;
+	padding: 0.2%;
+	border-radius: 0.2em;
+}
+
+</style>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"	/>
+	<title>Canvas</title>
+</head>
+
+<body>
+	<div class="layer-top" id="drawing-board">
+		<canvas id="cvs">Sorry, your browser is too old for this demo.</canvas>
+	</div>
+
+	<div id="navbar">
+		Hello
+		<input type="text" id="commandline" placeholder="[Please Enter to Chat]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Chat]'">
+		<button id="hand" disabled>🖐</button>
+		<button id="pencil">🖊️</button>
+		<button id="highlighter">🖍️</button>
+		<input id="palette" name='stroke' type="color" value="#580D8B">
+		<input id="lineWidthIn" name='lineWidth' type="number" value="6">
+		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
+		<button id="smoothen">∿</button>
+		<button id="straighten">╱</button>
+		<button id="undo" onclick="undoDraw()">↺ </button>
+		<button id="clear">🆑</button>
+		<button id="displayconsole">ℹ️</button>
+	</div>
+</body>
+<script src="radiocheck.js"></script>
+<script>
+
+
+const radiobtns = document.querySelectorAll("input[type=radio]");
+const radiostate = new Array(radiobtns.length).fill(false);
+const cvs = document.getElementById("cvs");
+const ctx = cvs.getContext('2d');
+ctx.lineWidth = 7;
+const maxHeight = 1080;
+const maxWidth = 1860;
+
+var mode = 1;
+let isDrawing = false;
+let lineWidth = 7;
+let points = [];
+let startX;
+let startY;
+let x, y;
+let xlast, ylast;
+
+let color = "#580D8B";
+
+
+
+var currentSlide = 0;
+var currentStep = 0;
+var maxStep = 0;
+const strokeHistory = [];
+
+const requestIdleCallback = window.requestIdleCallback || function (fn) { setTimeout(fn, 1) };
+
+window.addEventListener("beforeunload", function (evt) {
+	evt.preventDefault();
+	evt.returnValue = "";
+});
+
+
+cvs.height = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth));
+cvs.width = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth));
+
+
+
+navbar.addEventListener('change', evt => {
+
+    if(evt.target.id === "lineWidthIn") {
+		let input = parseInt(evt.target.value);
+		if (isNaN(input)) {
+			evt.target.value = ctx.lineWidth;
+		} else {
+			ctx.lineWidth = input;
+		}
+    }
+    
+});
+
+
+
+navbar.addEventListener('click', evt => {
+
+
+	if (evt.target.id === 'hand') {
+		mode = 0;
+		document.getElementById("drawing-board").inert = true;
+		document.getElementById("hand").disabled = true;
+		document.getElementById("pencil").disabled = false;
+		document.getElementById("highlighter").disabled = false;
+	}
+
+
+	if (evt.target.id === 'pencil') {
+		mode = 1;
+		document.getElementById("drawing-board").inert = false;
+		document.getElementById("hand").disabled = false;
+		document.getElementById("pencil").disabled = true;
+		document.getElementById("highlighter").disabled = false;
+		document.getElementById("palette").value = "#580D8B";
+		document.getElementById("lineWidthIn").value = 7;
+	}
+
+	if (evt.target.id === 'highlighter') {
+		mode = 2;
+		document.getElementById("drawing-board").inert = false;
+		document.getElementById("hand").disabled = false;
+		document.getElementById("pencil").disabled = false;
+		document.getElementById("highlighter").disabled = true;
+		document.getElementById("palette").value = "#89E485";
+		document.getElementById("lineWidthIn").value = 60;
+	}
+
+	if (evt.target.id === 'stylusbtn') {
+		document.getElementById("stylusonly").click();
+	}
+
+	if (evt.target.id === 'smoothen') {
+		let oldHistory = [];
+		let shid = strokeHistory.length - 1;
+		let ptid = strokeHistory[shid].length;
+		oldHistory = strokeHistory[shid].slice();
+		for (let cb = 1; cb < strokeHistory[shid].length-1; cb++){
+			strokeHistory[shid][cb].x = 0.4 * oldHistory[cb].x + 0.3 * oldHistory[cb-1].x + 0.3 * oldHistory[cb+1].x;
+			strokeHistory[shid][cb].y = 0.4 * oldHistory[cb].y + 0.3 * oldHistory[cb-1].y + 0.3 * oldHistory[cb+1].y;
+		}
+
+
+		ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+		for (let cc = 0; cc < strokeHistory.length; cc++) {
+			ctx.strokeStyle = strokeHistory[cc].color;
+			ctx.lineWidth = strokeHistory[cc].lineWidth;
+
+
+			switch (strokeHistory[cc].penType) {
+				case 1:
+					ctx.globalAlpha = 1;
+					ctx.lineCap = 'round'
+					ctx.lineJoin = 'round'
+					break;
+				case 2:
+					ctx.globalAlpha = 0.3;
+					ctx.lineCap = 'butt'
+					ctx.lineJoin = 'bevel'
+					break;
+				default:
+					return;
+			}
+
+			ctx.beginPath();
+			let strokePath = [];
+			strokeHistory[cc].map(function (point) {
+				strokePath.push(point)
+				pencilDraw(strokePath)
+			})
+		}
+		ctx.strokeStyle = document.getElementById("palette").value;
+		ctx.lineWidth = document.getElementById("lineWidthIn").value;
+	}
+
+
+	if (evt.target.id === 'straighten') {
+		let shid = strokeHistory.length - 1;
+		let ptid = strokeHistory[shid].length;
+		for (let cb = 0; cb < strokeHistory[shid].length - 1; cb++){
+			strokeHistory[shid][cb].x = (strokeHistory[shid][0].x * (ptid - cb) + strokeHistory[shid][ptid-1].x * cb)/ptid;
+			strokeHistory[shid][cb].y = (strokeHistory[shid][0].y * (ptid - cb) + strokeHistory[shid][ptid-1].y * cb)/ptid;
+		}
+
+
+		ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+		for (let cc = 0; cc < strokeHistory.length; cc++) {
+			ctx.strokeStyle = strokeHistory[cc].color;
+			ctx.lineWidth = strokeHistory[cc].lineWidth;
+
+
+			if (strokeHistory[cc].penType === 2) {
+				ctx.globalAlpha = 0.3;
+				ctx.lineCap = 'butt'
+				ctx.lineJoin = 'bevel'
+			} else {
+				ctx.globalAlpha = 1;
+				ctx.lineCap = 'round'
+				ctx.lineJoin = 'round'
+			}
+
+			ctx.beginPath();
+			let strokePath = [];
+			strokeHistory[cc].map(function (point) {
+				strokePath.push(point)
+				pencilDraw(strokePath)
+			})
+		}
+		ctx.strokeStyle = document.getElementById("palette").value;
+		ctx.lineWidth = document.getElementById("lineWidthIn").value;
+
+	}
+
+	if (evt.target.id === 'undo') {
+
+		strokeHistory.pop();
+
+
+		ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+		for (let cc = 0; cc < strokeHistory.length; cc++) {
+			ctx.strokeStyle = strokeHistory[cc].color;
+			ctx.lineWidth = strokeHistory[cc].lineWidth;
+
+
+			if (strokeHistory[cc].penType === 2) {
+				ctx.globalAlpha = 0.3;
+				ctx.lineCap = 'butt'
+				ctx.lineJoin = 'bevel'
+			} else {
+				ctx.globalAlpha = 1;
+				ctx.lineCap = 'round'
+				ctx.lineJoin = 'round'
+			}
+
+			ctx.beginPath();
+			let strokePath = [];
+			strokeHistory[cc].map(function (point) {
+				strokePath.push(point)
+				pencilDraw(strokePath)
+			})
+		}
+		ctx.strokeStyle = document.getElementById("palette").value;
+		ctx.lineWidth = document.getElementById("lineWidthIn").value;
+	}
+
+	if (evt.target.id === 'clear') {
+		if (confirm("Are you sure to clear the canvas?") === true) {
+			strokeHistory.length = 0;
+
+
+			ctx.clearRect(0, 0, cvs.width, cvs.height);
+		}
+
+	}
+
+
+
+});
+
+
+
+
+function pencilDraw (stroke) {
+	const l = stroke.length - 1
+	if (stroke.length >= 3) {
+		const xc = (stroke[l].x + stroke[l - 1].x) / 2
+		const yc = (stroke[l].y + stroke[l - 1].y) / 2
+		ctx.lineWidth = stroke[l - 1].lineWidth
+		ctx.strokeStyle = stroke[l - 1].color;
+		if (stroke[l - 1].penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
+		ctx.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc)
+		ctx.stroke()
+		ctx.beginPath()
+		ctx.moveTo(xc, yc)
+	} else {
+		const point = stroke[l];
+		ctx.lineWidth = point.lineWidth;
+		ctx.strokeStyle = point.color;
+		if (point.penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
+		ctx.beginPath();
+		ctx.moveTo(point.x, point.y);
+		ctx.stroke();
+	}
+}
+
+
+window.addEventListener('resize', evt => {
+	let xfactor = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth))/cvs.width
+	let yfactor = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth))/cvs.height;
+
+	cvs.width = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth));
+	cvs.height = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth));
+	for (let cc = 0; cc < strokeHistory.length; cc++) {
+		ctx.strokeStyle = strokeHistory[cc].color;
+		ctx.beginPath();
+		let strokePath = [];
+
+		if (strokeHistory[cc].penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
+		strokeHistory[cc].map(function (point) {
+			point.x = point.x*xfactor;
+			point.y = point.y*yfactor;
+			strokePath.push(point)
+			pencilDraw(strokePath)
+		})
+	}
+	ctx.strokeStyle = document.getElementById("palette").value;
+	ctx.lineWidth = document.getElementById("lineWidthIn").value;
+});
+
+
+
+
+for (const e of ["touchstart", "mousedown"]) {
+	cvs.addEventListener(e, function (evt) {
+		if (mode == 0) return;
+		if (document.getElementById("stylusonly").checked){
+			if (e.touches[0].touchType === 'direct') {
+				return;
+			}
+			if (e.touches[0].radiusX != 0 && e.touches[0].radiusY != 0){
+				return;
+			}
+		}
+		ctx.strokeStyle = document.getElementById("palette").value;
+		ctx.lineWidth = document.getElementById("lineWidthIn").value;
+
+		switch(mode) {
+			case 1:
+				ctx.globalAlpha = 1;
+				ctx.lineCap = 'round'
+				ctx.lineJoin = 'round'
+				break;
+			case 2:
+				ctx.globalAlpha = 0.3;
+				ctx.lineCap = 'butt'
+				ctx.lineJoin = 'bevel'
+				break;
+			default:
+				return;
+		}
+
+
+		if (evt.touches && evt.touches[0] && typeof evt.touches[0]["force"] === "direct") {
+		//Using Touch or Stylus
+			x = evt.touches[0].clientX - cvs.offsetLeft
+			y = evt.touches[0].clientY
+		} else {
+		// Using Mouse
+			x = evt.clientX - cvs.offsetLeft
+			y = evt.clientY
+		}
+
+		isDrawing = true;
+		penType = mode;
+		color = document.getElementById("palette").value;
+		lineWidth = document.getElementById("lineWidthIn").value;
+		points.push({ x, y, lineWidth, color, penType})
+		pencilDraw(points)
+
+
+	})
+}
+
+for (const e of ['touchmove', 'mousemove']) {
+	cvs.addEventListener(e, function (evt) {
+		if (mode == 0) return;
+		if (!isDrawing) return;
+
+		if (document.getElementById("stylusonly").checked === true){
+			if (evt.touches && evt.touches[0] && typeof evt.touches[0]["force"] !== "undefined"){
+				if (touch.touchType !== 'stylus'){
+					return; //Return if direct touch
+				}
+			} else {
+				return; //Return if mouse
+			}
+		}
+		evt.preventDefault()
+
+
+		
+		if (evt.touches && e.touches[0] && typeof evt.touches[0]["force"] !== "undefined") {
+			//Using Touch or Stylus
+			x = evt.touches[0].clientX - cvs.offsetLeft
+			y = evt.touches[0].clientY
+		} else {
+			//Using Mouse
+			x = evt.clientX - cvs.offsetLeft
+			y = evt.clientY
+		}
+		
+		// smoothen line width
+		penType = mode;
+		points.push({ x, y, lineWidth, color , penType})
+		pencilDraw(points);
+
+
+		xlast = x;
+		ylast = y;
+
+
+	})
+}
+
+
+for (const e of ['touchend', 'touchleave', 'mouseup', 'mouseleave']) {
+	cvs.addEventListener(e, function (evt) {
+		if (mode == 0) return;
+		if (!isDrawing) return
+
+
+
+		if (evt.touches && evt.touches[0] && typeof evt.touches[0]["force"] !== "undefined") {
+			//Using Touch or Stylus
+			x = evt.touches[0].clientX - cvs.offsetLeft
+			y = evt.touches[0].clientY
+		} else {
+			//Using Mouse
+			x = evt.clientX - cvs.offsetLeft
+			y = evt.clientY
+		}
+
+
+		isDrawing = false;
+
+		requestIdleCallback(function () { strokeHistory.push([...points]); points = []});
+
+
+/*
+		slidesHistory.push({strokeHistory})
+
+*/		
+
+
+	})
+};
+
+
+
+</script>
+
+
+</html>
