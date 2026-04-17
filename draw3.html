@@ -77,19 +77,10 @@ const context = canvas.getContext('2d')
 let lineWidth = 0
 let isMousedown = false
 let points = []
-/*
-canvas.width = window.innerWidth * 2
-canvas.height = window.innerHeight * 2
-*/
-/*
-const cvsx = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth));
-const cvsy = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth));
-*/
-const xmax = Math.max(screen.width,screen.height);
-const ymax = Math.ceil(0.58*Math.max(screen.width,screen.height));
 
-canvas.width = Math.max(screen.width,screen.height);
-canvas.height = Math.ceil(0.58*Math.max(screen.width,screen.height));
+
+canvas.width = 1860;
+canvas.height = 1080;
 
 const strokeHistory = []
 
@@ -157,19 +148,24 @@ for (const ev of ["touchstart", "mousedown"]) {
 		}
 		let pressure = 0.1;
 		let x, y;
-		const cvsx = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth));
-		const cvsy = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth));
+		try {
+			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
+			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
+		} catch (error){
+			xfactor = 2;
+			yfactor = 2;
+		}
 
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * xmax / cvsx
-			y = e.touches[0].offsetY * ymax / cvsy
+			x = e.touches[0].offsetX * xfactor
+			y = e.touches[0].offsetY * yfactor
 		} else {
 			pressure = 1.0
-			x = e.offsetX * xmax / cvsx
-			y = e.offsetY * ymax / cvsy
+			x = e.offsetX * xfactor
+			y = e.offsetY * yfactor
 		}
 
 		isMousedown = true
@@ -197,19 +193,24 @@ for (const ev of ['touchmove', 'mousemove']) {
 
 		let pressure = 0.1
 		let x, y
-		const cvsx = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth));
-		const cvsy = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth));
+		try {
+			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
+			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
+		} catch (error){
+			xfactor = 2;
+			yfactor = 2;
+		}
 
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * xmax / cvsx
-			y = e.touches[0].offsetY * ymax / cvsy
+			x = e.touches[0].offsetX * xfactor
+			y = e.touches[0].offsetY * yfactor
 		} else {
 			pressure = 1.0
-			x = e.offsetX * xmax / cvsx
-			y = e.offsetY * ymax / cvsy
+			x = e.offsetX * xfactor
+			y = e.offsetY * yfactor
 		}
 
 		// smoothen line width
@@ -240,19 +241,23 @@ for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 	canvas.addEventListener(ev, function (e) {
 		let pressure = 0.1;
 		let x, y;
-		const cvsx = Math.ceil(Math.min(1.72*window.innerHeight,0.986*window.innerWidth));
-		const cvsy = Math.ceil(Math.min(0.98*window.innerHeight,0.57*window.innerWidth));
-
+		try {
+			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
+			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
+		} catch (error){
+			xfactor = 2;
+			yfactor = 2;
+		}
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * xmax / cvsx
-			y = e.touches[0].offsetY * ymax / cvsy
+			x = e.touches[0].offsetX * xfactor
+			y = e.touches[0].offsetY * yfactor
 		} else {
 			pressure = 1.0
-			x = e.offsetX * xmax / cvsx
-			y = e.offsetY * ymax / cvsy
+			x = e.offsetX * xfactor
+			y = e.offsetY * yfactor
 		}
 
 		isMousedown = false
