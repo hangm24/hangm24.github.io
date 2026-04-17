@@ -2,7 +2,6 @@
 <html lang="en">
 
 
-<link rel="stylesheet" href="radiocheck.css">
 <style>
 body {
 	position: absolute;
@@ -66,7 +65,8 @@ canvas {
 </body>
 <script src="radiocheck.js"></script>
 <script>
-
+const radiobtns = document.querySelectorAll("input[type=radio]");
+const radiostate = new Array(radiobtns.length).fill(false);
 const cvs = document.getElementById("cvs")
 const ctx = cvs.getContext('2d')
 let lineWidth = 0
@@ -83,11 +83,20 @@ const strokeHistory = []
 
 const requestIdleCallback = window.requestIdleCallback || function (fn) { setTimeout(fn, 1) };
 
-/**
- * This function takes in an array of points and draws them onto the canvas.
- * @param {array} stroke array of points to draw on the canvas
- * @return {void}
- */
+for (let cr = 0; cr < radiobtns.length; cr++) {
+	radiobtns[cr].addEventListener('click', evt => {
+		if (radiostate[cr] == true) {
+			radiobtns[cr].checked = false;
+			radiostate[cr] = false;
+		} else {
+			radiobtns[cr].checked = true;
+			radiostate[cr] = true;
+		}
+	})
+
+}
+
+
 function drawOnCanvas (stroke) {
 	ctx.strokeStyle = 'black'
 	ctx.lineCap = 'round'
@@ -112,10 +121,7 @@ function drawOnCanvas (stroke) {
 	}
 }
 
-/**
- * Remove the previous stroke from history and repaint the entire canvas based on history
- * @return {void}
- */
+
 function undoDraw () {
 	strokeHistory.pop()
 	ctx.clearRect(0, 0, cvs.width, cvs.height)
