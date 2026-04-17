@@ -56,20 +56,20 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 		<button id="pencil">🖊️</button>
 		<button id="highlighter">🖍️</button>
 		<input id="palette" name="stroke" type="color" value="#580D8B">
-		<input id="lineWidthIn" name="lineWidth" type="number" value="6">
+		<input id="lineWidthIn" name="lineWidth" type="number" value="7">
 		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
 		<button id="undo" onclick="undoDraw()">↺ </button>
 		<button id="clear">🆑</button>
 	</div>
-</body>
+
 <script>
 const radiobtns = document.querySelectorAll("input[type=radio]");
 const radiostate = new Array(radiobtns.length).fill(false);
-const cvs = document.getElementById("cvs")
-const ctx = cvs.getContext("2d")
-let lineWidth = 0
-let isDrawing = false
-let points = []
+const cvs = document.getElementById("cvs");
+const ctx = cvs.getContext("2d");
+let lineWidth = 0;
+let isDrawing = false;
+let points = [];
 const xmax = 1852;
 const ymax = 1080;
 cvs.width = xmax;
@@ -118,7 +118,7 @@ function drawOnCanvas (stroke) {
 
 function undoDraw () {
 	strokeHistory.pop()
-	ctx.clearRect(0, 0, cvs.width, cvs.height)
+	ctx.clearRect(0, 0, cvs.width, cvs.height);
 
 	strokeHistory.map(function (stroke) {
 		if (strokeHistory.length === 0) return;
@@ -141,6 +141,8 @@ for (const ev of ["touchstart", "mousedown"]) {
 				return;
 			}
 		}
+		ctx.strokeStyle = document.getElementById("palette").value;
+		ctx.lineWidth = document.getElementById("lineWidthIn").value;
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			x = (e.touches[0].pageX / window.innerWidth) * xmax;
 			y = (e.touches[0].pageY / window.innerHeight) * ymax;
@@ -150,7 +152,6 @@ for (const ev of ["touchstart", "mousedown"]) {
 		}
 		isDrawing = true;
 		lineWidth = document.getElementById("lineWidthIn").value;
-		ctx.lineWidth = lineWidth;
 		points.push({ x, y, lineWidth });
 		drawOnCanvas(points);
 	})
@@ -167,7 +168,7 @@ for (const ev of ["touchmove", "mousemove"]) {
 				return;
 			}
 		}
-		e.preventDefault()
+		e.preventDefault();
 
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			x = (e.touches[0].pageX / window.innerWidth) * xmax;
@@ -196,5 +197,5 @@ for (const ev of ["touchend", "touchleave", "mouseup"]) {
 	})
 };
 </script>
-
+</body>
 </html>
