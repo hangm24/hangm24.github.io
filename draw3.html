@@ -65,8 +65,7 @@ canvas {
 </body>
 <script src="radiocheck.js"></script>
 <script>
-const radiobtns = document.querySelectorAll("input[type=radio]");
-const radiostate = new Array(radiobtns.length).fill(false);
+
 const cvs = document.getElementById("cvs")
 const ctx = cvs.getContext('2d')
 let lineWidth = 0
@@ -83,18 +82,6 @@ const strokeHistory = []
 
 const requestIdleCallback = window.requestIdleCallback || function (fn) { setTimeout(fn, 1) };
 
-for (let cr = 0; cr < radiobtns.length; cr++) {
-	radiobtns[cr].addEventListener('click', evt => {
-		if (radiostate[cr] == true) {
-			radiobtns[cr].checked = false;
-			radiostate[cr] = false;
-		} else {
-			radiobtns[cr].checked = true;
-			radiostate[cr] = true;
-		}
-	})
-
-}
 
 
 function drawOnCanvas (stroke) {
