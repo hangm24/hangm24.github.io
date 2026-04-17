@@ -21,13 +21,13 @@ body {
 div.layer-top {justify-content: center; align-items: center}
 canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6vw);}
 
-#navbar {
+div.navbar {
 	z-index: 1;
 	width: min(155vh,90vw);
 	font-family: Andika;
-	font-size: 2.6vh;
+	font-size: 2.8vh;
 	position: absolute;
-	bottom: 1vh;
+	bottom: 1.8vh;
 	background: #99BBEE;
 	font-size: max(14px,2vh);
 	opacity: 0.92;
@@ -38,7 +38,34 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 	border-radius: 1em;
 	vertical-align: baseline;
 }
-
+input[type="text"],input[type="number"] {
+	font-family: Andika;
+	font-size: 2vh;
+	border-radius: 1em;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-width: 0.1em;
+}
+button {
+	font-family: Andika;
+	font-size: 2vh;
+	vertical-align: baseline;
+	border-radius: 1em;
+	padding-left: 0.7em;
+	padding-right: 0.7em;
+	border-width: 0.1em;
+}
+input#lineWidthIn{
+	width: 5em;
+}
+input[type="color"]{
+	height: 3vh;
+	width: 3vh;
+	border-radius: 1.5vh;
+}
+input[type="file"] {
+	display:none;
+}
 </style>
 <head>
 	<meta charset="UTF-8" />
@@ -50,7 +77,7 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 	<div class=""layer-top" id="drawing-board" inert>
 		<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
 	</div>
-	<div id="navbar">
+	<div class="navbar" id="navbar">
 		Hello
 		<input type="text" id="commandline" placeholder="[Please Enter to Chat]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Chat]'">
 		<button id="hand" disabled>🖐</button>
