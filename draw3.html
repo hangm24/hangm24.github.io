@@ -69,6 +69,7 @@ const cvs = document.getElementById("cvs");
 const ctx = cvs.getContext("2d");
 var lineWidth = 7;
 var color = "#580D8B";
+var mode = 1;
 let isDrawing = false;
 let points = [];
 const xmax = 1852;
@@ -102,6 +103,15 @@ function drawOnCanvas (stroke) {
 		const yc = (stroke[l].y + stroke[l - 1].y) / 2;
 		ctx.lineWidth = stroke[l - 1].lineWidth;
 		ctx.strokeStyle = stroke[l - 1].color;
+		if (stroke[l - 1].penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
 		ctx.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc);
 		ctx.stroke();
 		ctx.beginPath();
@@ -110,6 +120,15 @@ function drawOnCanvas (stroke) {
 		const point = stroke[l];
 		ctx.lineWidth = point.lineWidth;
 		ctx.strokeStyle = point.color;
+		if (point.penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
 		ctx.beginPath();
 		ctx.moveTo(point.x, point.y);
 		ctx.stroke();
@@ -162,6 +181,23 @@ for (const ev of ["touchstart", "mousedown"]) {
 		}
 		ctx.strokeStyle = document.getElementById("palette").value;
 		ctx.lineWidth = document.getElementById("lineWidthIn").value;
+
+		switch(mode) {
+			case 1:
+				ctx.globalAlpha = 1;
+				ctx.lineCap = 'round'
+				ctx.lineJoin = 'round'
+				break;
+			case 2:
+				ctx.globalAlpha = 0.3;
+				ctx.lineCap = 'butt'
+				ctx.lineJoin = 'bevel'
+				break;
+			default:
+				return;
+		}
+
+
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			x = (e.touches[0].pageX / window.innerWidth) * xmax;
 			y = (e.touches[0].pageY / window.innerHeight) * ymax;
@@ -170,9 +206,10 @@ for (const ev of ["touchstart", "mousedown"]) {
 			y = (e.pageY / window.innerHeight) * ymax;
 		}
 		isDrawing = true;
+		penType = mode;
 		color = document.getElementById("palette").value;
 		lineWidth = document.getElementById("lineWidthIn").value;
-		points.push({ x, y, lineWidth , color });
+		points.push({x, y, lineWidth, color, penType});
 		drawOnCanvas(points);
 	})
 }
@@ -197,9 +234,10 @@ for (const ev of ["touchmove", "mousemove"]) {
 			x = (e.pageX / window.innerWidth) * xmax;
 			y = (e.pageY / window.innerHeight) * ymax; 
 		}
+		penType = mode;
 		color = document.getElementById("palette").value;
 		lineWidth = document.getElementById("lineWidthIn").value;
-		points.push({ x, y, lineWidth , color });
+		points.push({x, y, lineWidth, color, penType});
 		drawOnCanvas(points);
 	})
 }
