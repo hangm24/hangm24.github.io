@@ -148,26 +148,16 @@ for (const ev of ["touchstart", "mousedown"]) {
 		}
 		let pressure = 0.1;
 		let x, y;
-		let xfactor = 2;
-		let yfactor = 2;
-		try {
-			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
-			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
-		} catch (error){
-			xfactor = 2;
-			yfactor = 2;
-		}
-
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * xfactor
-			y = e.touches[0].offsetY * yfactor
+			x = e.touches[0].offsetX * 2
+			y = e.touches[0].offsetY * 2
 		} else {
 			pressure = 1.0
-			x = e.offsetX * xfactor
-			y = e.offsetY * yfactor
+			x = e.offsetX * 2
+			y = e.offsetY * 2
 		}
 
 		isMousedown = true
@@ -195,26 +185,18 @@ for (const ev of ['touchmove', 'mousemove']) {
 
 		let pressure = 0.1
 		let x, y
-		let xfactor = 2;
-		let yfactor = 2;
-		try {
-			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
-			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
-		} catch (error){
-			xfactor = 2;
-			yfactor = 2;
-		}
+
 
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * xfactor
-			y = e.touches[0].offsetY * yfactor
+			x = e.touches[0].offsetX * 2
+			y = e.touches[0].offsetY * 2
 		} else {
 			pressure = 1.0
-			x = e.offsetX * xfactor
-			y = e.offsetY * yfactor
+			x = e.offsetX * 2
+			y = e.offsetY * 2
 		}
 
 		// smoothen line width
@@ -245,25 +227,17 @@ for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 	canvas.addEventListener(ev, function (e) {
 		let pressure = 0.1;
 		let x, y;
-		let xfactor = 2;
-		let yfactor = 2;
-		try {
-			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
-			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
-		} catch (error){
-			xfactor = 2;
-			yfactor = 2;
-		}
+
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * xfactor
-			y = e.touches[0].offsetY * yfactor
+			x = e.touches[0].offsetX * 2
+			y = e.touches[0].offsetY * 2
 		} else {
 			pressure = 1.0
-			x = e.offsetX * xfactor
-			y = e.offsetY * yfactor
+			x = e.offsetX * 2
+			y = e.offsetY * 2
 		}
 
 		isMousedown = false
