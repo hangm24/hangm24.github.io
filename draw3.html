@@ -173,6 +173,42 @@ function drawOnCanvas (stroke) {
 	}
 }
 
+function smoothen () {
+
+	let oldHistory = [];
+	let shid = strokeHistory.length - 1;
+	let ptid = strokeHistory[shid].length;
+	oldHistory = strokeHistory[shid].slice();
+	for (let cb = 1; cb < strokeHistory[shid].length-1; cb++){
+		strokeHistory[shid][cb].x = 0.4 * oldHistory[cb].x + 0.3 * oldHistory[cb-1].x + 0.3 * oldHistory[cb+1].x;
+		strokeHistory[shid][cb].y = 0.4 * oldHistory[cb].y + 0.3 * oldHistory[cb-1].y + 0.3 * oldHistory[cb+1].y;
+	}
+	ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+	for (let cc = 0; cc < strokeHistory.length; cc++) {
+		ctx.strokeStyle = strokeHistory[cc].color;
+		ctx.lineWidth = strokeHistory[cc].lineWidth;
+		if (strokeHistory[cc].penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
+		ctx.beginPath();
+		let strokePath = [];
+		strokeHistory[cc].map(function (point) {
+			strokePath.push(point)
+			drawOnCanvas(strokePath)
+		})
+	}
+	ctx.strokeStyle = document.getElementById("palette").value;
+	ctx.lineWidth = document.getElementById("lineWidthIn").value;
+
+}
+
 function straighten () {
 	let shid = strokeHistory.length - 1;
 	let ptid = strokeHistory[shid].length;
@@ -207,15 +243,11 @@ function straighten () {
 
 function undoDraw () {
 	strokeHistory.pop();
-
-
 	ctx.clearRect(0, 0, cvs.width, cvs.height);
 
 	for (let cc = 0; cc < strokeHistory.length; cc++) {
 		ctx.strokeStyle = strokeHistory[cc].color;
 		ctx.lineWidth = strokeHistory[cc].lineWidth;
-
-		/*
 		if (strokeHistory[cc].penType === 2) {
 			ctx.globalAlpha = 0.3;
 			ctx.lineCap = 'butt'
@@ -225,8 +257,6 @@ function undoDraw () {
 			ctx.lineCap = 'round'
 			ctx.lineJoin = 'round'
 		}
-		*/
-
 		ctx.beginPath();
 		let strokePath = [];
 		strokeHistory[cc].map(function (point) {
@@ -278,7 +308,9 @@ navbar.addEventListener("click", evt => {
 	if (evt.target.id === "stylusbtn") {
 		document.getElementById("stylusonly").click();
 	}
-
+	if (evt.target.id === 'smoothen') {
+		smoothen();
+	}
 	if (evt.target.id === 'straighten') {
 		straighten();
 	}
@@ -307,7 +339,6 @@ for (const ev of ["touchstart", "mousedown"]) {
 		}
 		ctx.strokeStyle = document.getElementById("palette").value;
 		ctx.lineWidth = document.getElementById("lineWidthIn").value;
-
 		switch(mode) {
 			case 1:
 				ctx.globalAlpha = 1;
@@ -322,8 +353,6 @@ for (const ev of ["touchstart", "mousedown"]) {
 			default:
 				return;
 		}
-
-
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			x = (e.touches[0].pageX / window.innerWidth) * xmax;
 			y = (e.touches[0].pageY / window.innerHeight) * ymax;
