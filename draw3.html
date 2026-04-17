@@ -152,12 +152,12 @@ for (const ev of ["touchstart", "mousedown"]) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * 2
-			y = e.touches[0].offsetY * 2
+			x = e.touches[0].pageX * 2
+			y = e.touches[0].pageY * 2
 		} else {
 			pressure = 1.0
-			x = e.offsetX * 2
-			y = e.offsetY * 2
+			x = e.pageX * 2
+			y = e.pageY * 2
 		}
 
 		isMousedown = true
@@ -191,12 +191,12 @@ for (const ev of ['touchmove', 'mousemove']) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * 2
-			y = e.touches[0].offsetY * 2
+			x = e.touches[0].pageX * 2
+			y = e.touches[0].pageY * 2
 		} else {
 			pressure = 1.0
-			x = e.offsetX * 2
-			y = e.offsetY * 2
+			x = e.pageX * 2
+			y = e.pageY * 2
 		}
 
 		// smoothen line width
@@ -232,12 +232,12 @@ for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].offsetX * 2
-			y = e.touches[0].offsetY * 2
+			x = e.touches[0].pageX * 2
+			y = e.touches[0].pageY * 2
 		} else {
 			pressure = 1.0
-			x = e.offsetX * 2
-			y = e.offsetY * 2
+			x = e.pageX * 2
+			y = e.pageY * 2
 		}
 
 		isMousedown = false
