@@ -55,8 +55,8 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 		<button id="hand" disabled>🖐</button>
 		<button id="pencil">🖊️</button>
 		<button id="highlighter">🖍️</button>
-		<input id="palette" name='stroke' type="color" value="#580D8B">
-		<input id="lineWidthIn" name='lineWidth' type="number" value="6">
+		<input id="palette" name="stroke" type="color" value="#580D8B">
+		<input id="lineWidthIn" name="lineWidth" type="number" value="6">
 		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
 		<button id="undo" onclick="undoDraw()">↺ </button>
 		<button id="clear">🆑</button>
@@ -66,7 +66,7 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 const radiobtns = document.querySelectorAll("input[type=radio]");
 const radiostate = new Array(radiobtns.length).fill(false);
 const cvs = document.getElementById("cvs")
-const ctx = cvs.getContext('2d')
+const ctx = cvs.getContext("2d")
 let lineWidth = 0
 let isDrawing = false
 let points = []
@@ -75,14 +75,13 @@ const ymax = 1080;
 cvs.width = xmax;
 cvs.height = ymax;
 let x, y;
-let xoff=0;
-let yoff=0;
+
 
 const strokeHistory = []
 
 const requestIdleCallback = window.requestIdleCallback || function (fn) { setTimeout(fn, 1) };
 for (let cr = 0; cr < radiobtns.length; cr++) {
-	radiobtns[cr].addEventListener('click', evt => {
+	radiobtns[cr].addEventListener("click", evt => {
 		if (radiostate[cr] == true) {
 			radiobtns[cr].checked = false;
 			radiostate[cr] = false;
@@ -94,25 +93,25 @@ for (let cr = 0; cr < radiobtns.length; cr++) {
 }
 
 function drawOnCanvas (stroke) {
-	ctx.strokeStyle = 'black'
-	ctx.lineCap = 'round'
-	ctx.lineJoin = 'round'
-	const l = stroke.length - 1
+	ctx.strokeStyle = "black";
+	ctx.lineCap = "round";
+	ctx.lineJoin = "round";
+	const l = stroke.length - 1;
 	if (stroke.length >= 3) {
-		const xc = (stroke[l].x + stroke[l - 1].x) / 2
-		const yc = (stroke[l].y + stroke[l - 1].y) / 2
-		ctx.lineWidth = stroke[l - 1].lineWidth
-		ctx.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc)
-		ctx.stroke()
-		ctx.beginPath()
-		ctx.moveTo(xc, yc)
+		const xc = (stroke[l].x + stroke[l - 1].x) / 2;
+		const yc = (stroke[l].y + stroke[l - 1].y) / 2;
+		ctx.lineWidth = stroke[l - 1].lineWidth;
+		ctx.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc);
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo(xc, yc);
 	} else {
 		const point = stroke[l];
-		ctx.lineWidth = point.lineWidth
-		ctx.strokeStyle = point.color
-		ctx.beginPath()
-		ctx.moveTo(point.x, point.y)
-		ctx.stroke()
+		ctx.lineWidth = point.lineWidth;
+		ctx.strokeStyle = point.color;
+		ctx.beginPath();
+		ctx.moveTo(point.x, point.y);
+		ctx.stroke();
 	}
 }
 
@@ -122,20 +121,20 @@ function undoDraw () {
 	ctx.clearRect(0, 0, cvs.width, cvs.height)
 
 	strokeHistory.map(function (stroke) {
-		if (strokeHistory.length === 0) return
-		ctx.beginPath()
+		if (strokeHistory.length === 0) return;
+		ctx.beginPath();
 		let strokePath = [];
 		stroke.map(function (point) {
-			strokePath.push(point)
-			drawOnCanvas(strokePath)
+			strokePath.push(point);
+			drawOnCanvas(strokePath);
 		})
 	})
 }
 
 for (const ev of ["touchstart", "mousedown"]) {
 	cvs.addEventListener(ev, function (e) {
-		if (document.querySelector('#stylusonly').checked){
-			if (e.touches[0].touchType === 'direct') {
+		if (document.querySelector("#stylusonly").checked){
+			if (e.touches[0].touchType === "direct") {
 				return;
 			}
 			if (e.touches[0].radiusX != 0 && e.touches[0].radiusY != 0){
@@ -143,25 +142,25 @@ for (const ev of ["touchstart", "mousedown"]) {
 			}
 		}
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-			x = ((e.touches[0].pageX - xoff) / window.innerWidth) * xmax 
-			y = ((e.touches[0].pageY - yoff) / window.innerHeight) * ymax
+			x = (e.touches[0].pageX / window.innerWidth) * xmax;
+			y = (e.touches[0].pageY / window.innerHeight) * ymax;
 		} else {
-			x = ((e.pageX-xoff) / window.innerWidth) * xmax
-			y = ((e.pageY-yoff) / window.innerHeight) * ymax 
+			x = (e.pageX / window.innerWidth) * xmax;
+			y = (e.pageY / window.innerHeight) * ymax;
 		}
-		isDrawing = true
+		isDrawing = true;
 		lineWidth = document.getElementById("lineWidthIn").value;
 		ctx.lineWidth = lineWidth;
-		points.push({ x, y, lineWidth })
-		drawOnCanvas(points)
+		points.push({ x, y, lineWidth });
+		drawOnCanvas(points);
 	})
 }
 
-for (const ev of ['touchmove', 'mousemove']) {
+for (const ev of ["touchmove", "mousemove"]) {
 	cvs.addEventListener(ev, function (e) {
-		if (!isDrawing) return
-		if (document.querySelector('#stylusonly').checked){
-			if (e.touches[0].touchType === 'direct') {
+		if (!isDrawing) return;
+		if (document.querySelector("#stylusonly").checked){
+			if (e.touches[0].touchType === "direct") {
 				return;
 			}
 			if (e.touches[0].radiusX != 0 && e.touches[0].radiusY != 0){
@@ -171,29 +170,29 @@ for (const ev of ['touchmove', 'mousemove']) {
 		e.preventDefault()
 
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-			x = ((e.touches[0].pageX - xoff) / window.innerWidth) * xmax 
-			y = ((e.touches[0].pageY - yoff) / window.innerHeight) * ymax
+			x = (e.touches[0].pageX / window.innerWidth) * xmax;
+			y = (e.touches[0].pageY / window.innerHeight) * ymax;
 		} else {
-			x = ((e.pageX-xoff) / window.innerWidth) * xmax
-			y = ((e.pageY-yoff) / window.innerHeight) * ymax 
+			x = (e.pageX / window.innerWidth) * xmax;
+			y = (e.pageY / window.innerHeight) * ymax; 
 		}
 		lineWidth = document.getElementById("lineWidthIn").value;
-		points.push({ x, y, lineWidth })
+		points.push({ x, y, lineWidth });
 		drawOnCanvas(points);
 	})
 }
 
-for (const ev of ['touchend', 'touchleave', 'mouseup']) {
+for (const ev of ["touchend", "touchleave", "mouseup"]) {
 	cvs.addEventListener(ev, function (e) {
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-			x = ((e.touches[0].pageX - xoff) / window.innerWidth) * xmax 
-			y = ((e.touches[0].pageY - yoff) / window.innerHeight) * ymax
+			x = (e.touches[0].pageX / window.innerWidth) * xmax; 
+			y = (e.touches[0].pageY / window.innerHeight) * ymax;
 		} else {
-			x = ((e.pageX-xoff) / window.innerWidth) * xmax
-			y = ((e.pageY-yoff) / window.innerHeight) * ymax 
+			x = (e.pageX / window.innerWidth) * xmax;
+			y = (e.pageY / window.innerHeight) * ymax;
 		}
-		isDrawing = false
-		requestIdleCallback(function () { strokeHistory.push([...points]); points = []})
+		isDrawing = false;
+		requestIdleCallback(function () { strokeHistory.push([...points]); points = []});
 	})
 };
 </script>
