@@ -37,6 +37,7 @@ div.navbar {
 	padding-right: 1em;
 	border-radius: 1em;
 	vertical-align: baseline;
+	text-align: center;
 }
 input[type="text"],input[type="number"] {
 	font-family: Andika;
@@ -78,16 +79,22 @@ input[type="file"] {
 		<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
 	</div>
 	<div class="navbar" id="navbar">
-		Hello
+		<input type='file' id="rawdata" accept=".html">
+		<button id="import" onclick="document.querySelector('#rawdata').click()">Import</button>
+		<button id="exportlog">Export Log</button>
 		<input type="text" id="commandline" placeholder="[Please Enter to Chat]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Chat]'">
 		<button id="hand" disabled>🖐</button>
 		<button id="pencil">🖊️</button>
 		<button id="highlighter">🖍️</button>
 		<input id="palette" name="stroke" type="color" value="#580D8B">
 		<input id="lineWidthIn" name="lineWidth" type="number" value="7">
-		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
+		<button id="backwardbtn">◀</button>
+		<button id="forwardbtn">▶</button>
+		<button id="smoothen">∿</button>
+		<button id="straighten">╱</button>
 		<button id="undo">↺ </button>
 		<button id="clear">🆑</button>
+		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
 	</div>
 
 <script>
@@ -163,6 +170,37 @@ function drawOnCanvas (stroke) {
 	}
 }
 
+function straighten () {
+	let shid = strokeHistory.length - 1;
+	let ptid = strokeHistory[shid].length;
+	for (let cb = 0; cb <strokeHistory[shid].length - 1; cb++){
+		strokeHistory[shid][cb].x = (strokeHistory[shid][0].x * (ptid - cb) + strokeHistory[shid][ptid-1].x * cb)/ptid;
+		strokeHistory[shid][cb].y = (strokeHistory[shid][0].y * (ptid - cb) + strokeHistory[shid][ptid-1].y * cb)/ptid;
+	}
+	ctx.clearRect(0, 0, cvs.width, cvs.height);
+	for (let cc = 0; cc < strokeHistory.length; cc++) {
+		ctx.strokeStyle = strokeHistory[cc].color;
+		ctx.lineWidth = strokeHistory[cc].lineWidth;
+
+		if (strokeHistory[cc].penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
+		ctx.beginPath();
+		let strokePath = [];
+		strokeHistory[cc].map(function (point) {
+			strokePath.push(point)
+			drawOnCanvas(strokePath)
+		})
+	}
+	ctx.strokeStyle = document.getElementById("palette").value;
+	ctx.lineWidth = document.getElementById("lineWidthIn").value;
+}
 
 function undoDraw () {
 	strokeHistory.pop();
@@ -197,8 +235,16 @@ function undoDraw () {
 	ctx.lineWidth = document.getElementById("lineWidthIn").value;
 }
 
-navbar.addEventListener('click', evt => {
-	if (evt.target.id === 'hand') {
+function clearCanvas() {
+	if (confirm("Are you sure to clear the canvas?") === true) {
+		strokeHistory.length = 0;
+		ctx.clearRect(0, 0, cvs.width, cvs.height);
+	}
+}
+
+
+navbar.addEventListener("click", evt => {
+	if (evt.target.id === "hand") {
 		mode = 0;
 		document.getElementById("drawing-board").inert = true;
 		document.getElementById("hand").disabled = true;
@@ -206,7 +252,7 @@ navbar.addEventListener('click', evt => {
 		document.getElementById("highlighter").disabled = false;
 	}
 
-	if (evt.target.id === 'pencil') {
+	if (evt.target.id === "pencil") {
 		mode = 1;
 		document.getElementById("drawing-board").inert = false;
 		document.getElementById("hand").disabled = false;
@@ -216,7 +262,7 @@ navbar.addEventListener('click', evt => {
 		document.getElementById("lineWidthIn").value = 7;
 	}
 
-	if (evt.target.id === 'highlighter') {
+	if (evt.target.id === "highlighter") {
 		mode = 2;
 		document.getElementById("drawing-board").inert = false;
 		document.getElementById("hand").disabled = false;
@@ -226,19 +272,20 @@ navbar.addEventListener('click', evt => {
 		document.getElementById("lineWidthIn").value = 60;
 	}
 
-	if (evt.target.id === 'stylusbtn') {
+	if (evt.target.id === "stylusbtn") {
 		document.getElementById("stylusonly").click();
 	}
 
-	if (evt.target.id === 'undo') {
+	if (evt.target.id === 'straighten') {
+		straighten();
+	}
+
+	if (evt.target.id === "undo") {
 		undoDraw();
 	}
 
-	if (evt.target.id === 'clear') {
-		if (confirm("Are you sure to clear the canvas?") === true) {
-			strokeHistory.length = 0;
-			ctx.clearRect(0, 0, cvs.width, cvs.height);
-		}
+	if (evt.target.id === "clear") {
+		clearCanvas();
 	}
 
 });
