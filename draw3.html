@@ -148,6 +148,8 @@ for (const ev of ["touchstart", "mousedown"]) {
 		}
 		let pressure = 0.1;
 		let x, y;
+		let xfactor = 2;
+		let yfactor = 2;
 		try {
 			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
 			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
@@ -193,6 +195,8 @@ for (const ev of ['touchmove', 'mousemove']) {
 
 		let pressure = 0.1
 		let x, y
+		let xfactor = 2;
+		let yfactor = 2;
 		try {
 			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
 			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
@@ -241,6 +245,8 @@ for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 	canvas.addEventListener(ev, function (e) {
 		let pressure = 0.1;
 		let x, y;
+		let xfactor = 2;
+		let yfactor = 2;
 		try {
 			xfactor = 1860/Math.min(1.72*window.innerHeight,0.986*window.innerWidth);
 			yfactor = 1080/Math.min(0.98*window.innerHeight,0.57*window.innerWidth);
