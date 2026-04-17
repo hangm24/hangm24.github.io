@@ -47,8 +47,9 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 </head>
 
 <body>
-	<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
-
+	<div class=""layer-top" id="drawing-board" inert>
+		<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
+	</div>
 	<div id="navbar">
 		Hello
 		<input type="text" id="commandline" placeholder="[Please Enter to Chat]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Chat]'">
@@ -58,7 +59,7 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 		<input id="palette" name="stroke" type="color" value="#580D8B">
 		<input id="lineWidthIn" name="lineWidth" type="number" value="7">
 		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
-		<button id="undo" onclick="undoDraw()">↺ </button>
+		<button id="undo">↺ </button>
 		<button id="clear">🆑</button>
 	</div>
 
@@ -168,6 +169,54 @@ function undoDraw () {
 	ctx.strokeStyle = document.getElementById("palette").value;
 	ctx.lineWidth = document.getElementById("lineWidthIn").value;
 }
+
+navbar.addEventListener('click', evt => {
+	if (evt.target.id === 'hand') {
+		mode = 0;
+		document.getElementById("drawing-board").inert = true;
+		document.getElementById("hand").disabled = true;
+		document.getElementById("pencil").disabled = false;
+		document.getElementById("highlighter").disabled = false;
+	}
+
+	if (evt.target.id === 'pencil') {
+		mode = 1;
+		document.getElementById("drawing-board").inert = false;
+		document.getElementById("hand").disabled = false;
+		document.getElementById("pencil").disabled = true;
+		document.getElementById("highlighter").disabled = false;
+		document.getElementById("palette").value = "#580D8B";
+		document.getElementById("lineWidthIn").value = 7;
+	}
+
+	if (evt.target.id === 'highlighter') {
+		mode = 2;
+		document.getElementById("drawing-board").inert = false;
+		document.getElementById("hand").disabled = false;
+		document.getElementById("pencil").disabled = false;
+		document.getElementById("highlighter").disabled = true;
+		document.getElementById("palette").value = "#89E485";
+		document.getElementById("lineWidthIn").value = 60;
+	}
+
+	if (evt.target.id === 'stylusbtn') {
+		document.getElementById("stylusonly").click();
+	}
+
+	if (evt.target.id === 'undo') {
+		undoDraw();
+	}
+
+	if (evt.target.id === 'clear') {
+		if (confirm("Are you sure to clear the canvas?") === true) {
+			strokeHistory.length = 0;
+			ctx.clearRect(0, 0, cvs.width, cvs.height);
+		}
+	}
+
+});
+
+
 
 for (const ev of ["touchstart", "mousedown"]) {
 	cvs.addEventListener(ev, function (e) {
