@@ -1,7 +1,6 @@
 <!DOCTYPE html>	
 <html lang="en">
 
-
 <style>
 body {
 	position: absolute;
@@ -11,22 +10,15 @@ body {
 	top: 0;
 	width: 100%;
 	height: 100%;
-	font-family: sans-serif;
-	font-size: 13px;
-	padding: 1em;
 	box-sizing: border-box;
 	justify-content: center; 
-	align-items: center
+	align-items: center;
 }
 
 div.layer-top {justify-content: center; align-items: center}
-canvas {
-	background-color: #FFF9F4;
-	height: min(98vh,57vw); 
-	width: min(172vh,98.6vw);
-}
+canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6vw);}
 
-#controls {
+#navbar {
 	z-index: 1;
 	position: absolute;
 	bottom: 2.5%;
@@ -47,7 +39,7 @@ canvas {
 <body>
 	<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
 
-	<div id="controls">
+	<div id="navbar">
 		Hello
 		<input type="text" id="commandline" placeholder="[Please Enter to Chat]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Chat]'">
 		<button id="hand" disabled>🖐</button>
@@ -56,39 +48,45 @@ canvas {
 		<input id="palette" name='stroke' type="color" value="#580D8B">
 		<input id="lineWidthIn" name='lineWidth' type="number" value="6">
 		<button id="stylusbtn"><input type="radio" id="stylusonly">&nbsp&nbspStylus Only</button>
-		<button id="smoothen">∿</button>
-		<button id="straighten">╱</button>
 		<button id="undo" onclick="undoDraw()">↺ </button>
 		<button id="clear">🆑</button>
-		<button id="displayconsole">ℹ️</button>
 	</div>
 </body>
-<script src="radiocheck.js"></script>
 <script>
-
+const radiobtns = document.querySelectorAll("input[type=radio]");
+const radiostate = new Array(radiobtns.length).fill(false);
 const cvs = document.getElementById("cvs")
 const ctx = cvs.getContext('2d')
 let lineWidth = 0
-let isMousedown = false
+let isDrawing = false
 let points = []
 const xmax = 1852;
 const ymax = 1080;
 cvs.width = xmax;
 cvs.height = ymax;
+let x, y;
 let xoff=0;
 let yoff=0;
 
 const strokeHistory = []
 
 const requestIdleCallback = window.requestIdleCallback || function (fn) { setTimeout(fn, 1) };
-
-
+for (let cr = 0; cr < radiobtns.length; cr++) {
+	radiobtns[cr].addEventListener('click', evt => {
+		if (radiostate[cr] == true) {
+			radiobtns[cr].checked = false;
+			radiostate[cr] = false;
+		} else {
+			radiobtns[cr].checked = true;
+			radiostate[cr] = true;
+		}
+	})
+}
 
 function drawOnCanvas (stroke) {
 	ctx.strokeStyle = 'black'
 	ctx.lineCap = 'round'
 	ctx.lineJoin = 'round'
-
 	const l = stroke.length - 1
 	if (stroke.length >= 3) {
 		const xc = (stroke[l].x + stroke[l - 1].x) / 2
@@ -115,9 +113,7 @@ function undoDraw () {
 
 	strokeHistory.map(function (stroke) {
 		if (strokeHistory.length === 0) return
-
 		ctx.beginPath()
-
 		let strokePath = [];
 		stroke.map(function (point) {
 			strokePath.push(point)
@@ -136,28 +132,16 @@ for (const ev of ["touchstart", "mousedown"]) {
 				return;
 			}
 		}
-		let pressure = 0.1;
-		let x, y;
-
-
-
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-			if (e.touches[0]["force"] > 0) {
-				pressure = e.touches[0]["force"]
-			}
 			x = ((e.touches[0].pageX - xoff) / window.innerWidth) * xmax 
 			y = ((e.touches[0].pageY - yoff) / window.innerHeight) * ymax
 		} else {
-			pressure = 1.0
 			x = ((e.pageX-xoff) / window.innerWidth) * xmax
 			y = ((e.pageY-yoff) / window.innerHeight) * ymax 
 		}
-
-		isMousedown = true
-
-		lineWidth = Math.log(pressure + 1) * 40
-		ctx.lineWidth = lineWidth// pressure * 50;
-
+		isDrawing = true
+		lineWidth = document.getElementById("lineWidthIn").value;
+		ctx.lineWidth = lineWidth;
 		points.push({ x, y, lineWidth })
 		drawOnCanvas(points)
 	})
@@ -165,7 +149,7 @@ for (const ev of ["touchstart", "mousedown"]) {
 
 for (const ev of ['touchmove', 'mousemove']) {
 	cvs.addEventListener(ev, function (e) {
-		if (!isMousedown) return
+		if (!isDrawing) return
 		if (document.querySelector('#stylusonly').checked){
 			if (e.touches[0].touchType === 'direct') {
 				return;
@@ -176,73 +160,32 @@ for (const ev of ['touchmove', 'mousemove']) {
 		}
 		e.preventDefault()
 
-		let pressure = 0.1
-		let x, y
-
-
-
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-			if (e.touches[0]["force"] > 0) {
-				pressure = e.touches[0]["force"]
-			}
 			x = ((e.touches[0].pageX - xoff) / window.innerWidth) * xmax 
 			y = ((e.touches[0].pageY - yoff) / window.innerHeight) * ymax
 		} else {
-			pressure = 1.0
 			x = ((e.pageX-xoff) / window.innerWidth) * xmax
 			y = ((e.pageY-yoff) / window.innerHeight) * ymax 
 		}
-
-		// smoothen line width
-		lineWidth = (Math.log(pressure + 1) * 40 * 0.2 + lineWidth * 0.8)
+		lineWidth = document.getElementById("lineWidthIn").value;
 		points.push({ x, y, lineWidth })
-
 		drawOnCanvas(points);
-
-		requestIdleCallback(() => {
-			$force.textContent = 'force = ' + pressure
-
-			const touch = e.touches ? e.touches[0] : null
-			if (touch) {
-				$touches.innerHTML = `
-					touchType = ${touch.touchType} ${touch.touchType === 'direct' ? '👆' : '✍️'} <br/>
-					radiusX = ${touch.radiusX} <br/>
-					radiusY = ${touch.radiusY} <br/>
-					rotationAngle = ${touch.rotationAngle} <br/>
-					altitudeAngle = ${touch.altitudeAngle} <br/>
-					azimuthAngle = ${touch.azimuthAngle} <br/>
-				`
-			}
-		})
 	})
 }
 
 for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 	cvs.addEventListener(ev, function (e) {
-		let pressure = 0.1;
-		let x, y;
-
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-			if (e.touches[0]["force"] > 0) {
-				pressure = e.touches[0]["force"]
-			}
 			x = ((e.touches[0].pageX - xoff) / window.innerWidth) * xmax 
 			y = ((e.touches[0].pageY - yoff) / window.innerHeight) * ymax
 		} else {
-			pressure = 1.0
 			x = ((e.pageX-xoff) / window.innerWidth) * xmax
 			y = ((e.pageY-yoff) / window.innerHeight) * ymax 
 		}
-
-		isMousedown = false
-
+		isDrawing = false
 		requestIdleCallback(function () { strokeHistory.push([...points]); points = []})
-
-		lineWidth = 0
 	})
 };
-
 </script>
-
 
 </html>
