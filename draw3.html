@@ -2,6 +2,7 @@
 <html lang="en">
 
 <style>
+@import url(https://fonts.googleapis.com/css?family=Andika|Boogaloo);
 body {
 	position: absolute;
 	display:flex;
@@ -10,9 +11,11 @@ body {
 	top: 0;
 	width: 100%;
 	height: 100%;
+	background-color: #452D2F;
 	box-sizing: border-box;
 	justify-content: center; 
 	align-items: center;
+	font-family: Andika;
 }
 
 div.layer-top {justify-content: center; align-items: center}
@@ -20,13 +23,20 @@ canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6v
 
 #navbar {
 	z-index: 1;
+	width: min(155vh,90vw);
+	font-family: Andika;
+	font-size: 2.6vh;
 	position: absolute;
-	bottom: 2.5%;
+	bottom: 1vh;
 	background: #99BBEE;
 	font-size: max(14px,2vh);
 	opacity: 0.92;
 	padding: 0.2%;
-	border-radius: 0.2em;
+	padding-bottom: 0.3em;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-radius: 1em;
+	vertical-align: baseline;
 }
 
 </style>
