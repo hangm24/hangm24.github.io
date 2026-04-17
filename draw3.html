@@ -78,7 +78,6 @@ let lineWidth = 0
 let isMousedown = false
 let points = []
 
-
 canvas.width = 1860;
 canvas.height = 1080;
 
@@ -185,8 +184,6 @@ for (const ev of ['touchmove', 'mousemove']) {
 
 		let pressure = 0.1
 		let x, y
-
-
 		if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
