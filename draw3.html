@@ -67,7 +67,8 @@ const radiobtns = document.querySelectorAll("input[type=radio]");
 const radiostate = new Array(radiobtns.length).fill(false);
 const cvs = document.getElementById("cvs");
 const ctx = cvs.getContext("2d");
-let lineWidth = 0;
+var lineWidth = 7;
+var color = "#580D8B";
 let isDrawing = false;
 let points = [];
 const xmax = 1852;
@@ -93,7 +94,6 @@ for (let cr = 0; cr < radiobtns.length; cr++) {
 }
 
 function drawOnCanvas (stroke) {
-	ctx.strokeStyle = "black";
 	ctx.lineCap = "round";
 	ctx.lineJoin = "round";
 	const l = stroke.length - 1;
@@ -101,6 +101,7 @@ function drawOnCanvas (stroke) {
 		const xc = (stroke[l].x + stroke[l - 1].x) / 2;
 		const yc = (stroke[l].y + stroke[l - 1].y) / 2;
 		ctx.lineWidth = stroke[l - 1].lineWidth;
+		ctx.strokeStyle = stroke[l - 1].color;
 		ctx.quadraticCurveTo(stroke[l - 1].x, stroke[l - 1].y, xc, yc);
 		ctx.stroke();
 		ctx.beginPath();
@@ -117,18 +118,36 @@ function drawOnCanvas (stroke) {
 
 
 function undoDraw () {
-	strokeHistory.pop()
+	strokeHistory.pop();
+
+
 	ctx.clearRect(0, 0, cvs.width, cvs.height);
 
-	strokeHistory.map(function (stroke) {
-		if (strokeHistory.length === 0) return;
+	for (let cc = 0; cc < strokeHistory.length; cc++) {
+		ctx.strokeStyle = strokeHistory[cc].color;
+		ctx.lineWidth = strokeHistory[cc].lineWidth;
+
+		/*
+		if (strokeHistory[cc].penType === 2) {
+			ctx.globalAlpha = 0.3;
+			ctx.lineCap = 'butt'
+			ctx.lineJoin = 'bevel'
+		} else {
+			ctx.globalAlpha = 1;
+			ctx.lineCap = 'round'
+			ctx.lineJoin = 'round'
+		}
+		*/
+
 		ctx.beginPath();
 		let strokePath = [];
-		stroke.map(function (point) {
-			strokePath.push(point);
-			drawOnCanvas(strokePath);
+		strokeHistory[cc].map(function (point) {
+			strokePath.push(point)
+			drawOnCanvas(strokePath)
 		})
-	})
+	}
+	ctx.strokeStyle = document.getElementById("palette").value;
+	ctx.lineWidth = document.getElementById("lineWidthIn").value;
 }
 
 for (const ev of ["touchstart", "mousedown"]) {
@@ -151,8 +170,9 @@ for (const ev of ["touchstart", "mousedown"]) {
 			y = (e.pageY / window.innerHeight) * ymax;
 		}
 		isDrawing = true;
+		color = document.getElementById("palette").value;
 		lineWidth = document.getElementById("lineWidthIn").value;
-		points.push({ x, y, lineWidth });
+		points.push({ x, y, lineWidth , color });
 		drawOnCanvas(points);
 	})
 }
@@ -177,8 +197,9 @@ for (const ev of ["touchmove", "mousemove"]) {
 			x = (e.pageX / window.innerWidth) * xmax;
 			y = (e.pageY / window.innerHeight) * ymax; 
 		}
+		color = document.getElementById("palette").value;
 		lineWidth = document.getElementById("lineWidthIn").value;
-		points.push({ x, y, lineWidth });
+		points.push({ x, y, lineWidth , color });
 		drawOnCanvas(points);
 	})
 }
