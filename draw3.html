@@ -24,8 +24,8 @@ div.layer-top {justify-content: center; align-items: center}
 canvas {
 	background-color: #FFF9F4;
 
-	height: min(98vh,57vw);
-	width: min(172vh,98.6vw);
+	height: 100%;
+	width: 100%;
 }
 
 #controls {
@@ -47,9 +47,7 @@ canvas {
 </head>
 
 <body>
-	<div class="layer-top">
-		<canvas>Sorry, your browser is too old for this demo.</canvas>
-	</div>
+	<canvas>Sorry, your browser is too old for the canvas.</canvas>
 
 	<div id="controls">
 		Hello
@@ -77,9 +75,10 @@ const context = canvas.getContext('2d')
 let lineWidth = 0
 let isMousedown = false
 let points = []
-
-canvas.width = 1820;
-canvas.height = 1080;
+const xmax = 1852;
+const ymax = 1080;
+canvas.width = xmax;
+canvas.height = ymax;
 
 const strokeHistory = []
 
@@ -151,12 +150,12 @@ for (const ev of ["touchstart", "mousedown"]) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].pageX * 1.9
-			y = e.touches[0].pageY * 1.9
+			x = e.touches[0].pageX * xmax / window.innerWidth
+			y = e.touches[0].pageY * ymax / window.innerHeight
 		} else {
 			pressure = 1.0
-			x = e.pageX * 1.9
-			y = e.pageY * 1.9
+			x = e.pageX * xmax / window.innerWidth
+			y = e.pageY * ymax / window.innerHeight
 		}
 
 		isMousedown = true
@@ -188,12 +187,12 @@ for (const ev of ['touchmove', 'mousemove']) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].pageX * 1.9
-			y = e.touches[0].pageY * 1.9
+			x = e.touches[0].pageX * xmax / window.innerWidth
+			y = e.touches[0].pageY * ymax / window.innerHeight
 		} else {
 			pressure = 1.0
-			x = e.pageX * 1.9
-			y = e.pageY * 1.9
+			x = e.pageX * xmax / window.innerWidth
+			y = e.pageY * ymax / window.innerHeight
 		}
 
 		// smoothen line width
@@ -229,12 +228,12 @@ for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].pageX * 1.9
-			y = e.touches[0].pageY * 1.9
+			x = e.touches[0].pageX * xmax / window.innerWidth
+			y = e.touches[0].pageY * ymax / window.innerHeight
 		} else {
 			pressure = 1.0
-			x = e.pageX * 1.9
-			y = e.pageY * 1.9
+			x = e.pageX * xmax / window.innerWidth
+			y = e.pageY * ymax / window.innerHeight
 		}
 
 		isMousedown = false
