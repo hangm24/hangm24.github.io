@@ -6,6 +6,7 @@
 body {
 	position: absolute;
 	display:flex;
+	overflow: hidden;
 	margin: 0;
 	left: 0;
 	top: 0;
@@ -18,11 +19,30 @@ body {
 	font-family: Andika;
 }
 
-div.layer-top {justify-content: center; align-items: center}
+div.layer-top {z-index: 6; justify-content: center; align-items: center}
 canvas {background-color: #FFF9F4;height: min(98vh,57vw); width: min(172vh,98.6vw);}
 
+div.statebar {
+	z-index: 7;
+	width: min(155vh,90vw);
+	font-family:Boogaloo;
+	font-size: 3.4vh;
+	position: absolute;
+	top: 1vh;
+	background: #99BBEE;
+	font-size: max(14px,2vh);
+	opacity: 0.92;
+	padding: 0.2%;
+	padding-bottom: 0.15em;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-radius: 1em;
+	vertical-align: baseline;
+	text-align: center;
+}
+
 div.navbar {
-	z-index: 1;
+	z-index: 8;
 	width: min(155vh,90vw);
 	font-family: Andika;
 	font-size: 2.8vh;
@@ -77,10 +97,16 @@ input[type="file"] {
 	<title>Canvas</title>
 </head>
 
-<body>
+<body onload="runClock()">
 	<div class=""layer-top" id="drawing-board" inert>
 		<canvas id="cvs">Sorry, your browser is too old for the canvas.</canvas>
 	</div>
+
+	<div class="statebar" id="statebar" inert>
+		<output class="state" id="modeOut" style="float: left;font-size:3.2vh">Mode: 🖐</output>
+		<output class="state" id="displayclock" style="float: right;font-size:3.6vh"></output>
+	</div>
+
 	<div class="navbar" id="navbar">
 		<input type='file' id="rawdata" accept=".html">
 		<button id="import" onclick="document.querySelector('#rawdata').click()">Import</button>
@@ -131,6 +157,70 @@ for (let cr = 0; cr < radiobtns.length; cr++) {
 		}
 	})
 }
+
+function runClock() {
+	const clockvar = new Date();
+	let h = clockvar.getHours();
+	let m = clockvar.getMinutes();
+
+	if ( (h === 15) && (m >= 55) && (m <= 59)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else if ( (h === 14) && (m >= 45) && (m <= 54)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else if ( (h === 13) && (m >= 5) && (m <= 9)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else if ( (h === 12) && (m >= 5) && (m <= 9)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else if ( (h === 10) && (m >= 45) && (m <= 49)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else if ( (h === 9) && (m >= 45) && (m <= 49)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else if ( (h == 8) && (m >= 45) && (m <= 49)) {
+		h = checkTime(h);
+		m = checkTime(m);
+		let s = clockvar.getSeconds();
+		s = checkTime(s);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+	} else {
+		h = checkTime(h);
+		m = checkTime(m);
+		document.getElementById('displayclock').innerHTML =  h + ":" + m ;
+	}
+	setTimeout(runClock, 1000);
+}
+
+function checkTime(i) {
+	if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+	return i;
+}
+
+
+
+
 
 function drawOnCanvas (stroke) {
 	ctx.lineCap = "round";
@@ -279,6 +369,7 @@ function clearCanvas() {
 navbar.addEventListener("click", evt => {
 	if (evt.target.id === "hand") {
 		mode = 0;
+		document.getElementById("modeOut").innerHTML = "Mode: 🖐";
 		document.getElementById("drawing-board").inert = true;
 		document.getElementById("hand").disabled = true;
 		document.getElementById("pencil").disabled = false;
@@ -287,6 +378,7 @@ navbar.addEventListener("click", evt => {
 
 	if (evt.target.id === "pencil") {
 		mode = 1;
+		document.getElementById("modeOut").innerHTML = "Mode: 🖊️";
 		document.getElementById("drawing-board").inert = false;
 		document.getElementById("hand").disabled = false;
 		document.getElementById("pencil").disabled = true;
@@ -297,6 +389,7 @@ navbar.addEventListener("click", evt => {
 
 	if (evt.target.id === "highlighter") {
 		mode = 2;
+		document.getElementById("modeOut").innerHTML = "Mode: 🖍️";
 		document.getElementById("drawing-board").inert = false;
 		document.getElementById("hand").disabled = false;
 		document.getElementById("pencil").disabled = false;
