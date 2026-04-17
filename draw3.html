@@ -78,7 +78,7 @@ let lineWidth = 0
 let isMousedown = false
 let points = []
 
-canvas.width = 1860;
+canvas.width = 1820;
 canvas.height = 1080;
 
 const strokeHistory = []
@@ -151,12 +151,12 @@ for (const ev of ["touchstart", "mousedown"]) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].pageX * 2
-			y = e.touches[0].pageY * 2
+			x = e.touches[0].pageX * 1.9
+			y = e.touches[0].pageY * 1.9
 		} else {
 			pressure = 1.0
-			x = e.pageX * 2
-			y = e.pageY * 2
+			x = e.pageX * 1.9
+			y = e.pageY * 1.9
 		}
 
 		isMousedown = true
@@ -188,12 +188,12 @@ for (const ev of ['touchmove', 'mousemove']) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].pageX * 2
-			y = e.touches[0].pageY * 2
+			x = e.touches[0].pageX * 1.9
+			y = e.touches[0].pageY * 1.9
 		} else {
 			pressure = 1.0
-			x = e.pageX * 2
-			y = e.pageY * 2
+			x = e.pageX * 1.9
+			y = e.pageY * 1.9
 		}
 
 		// smoothen line width
@@ -229,12 +229,12 @@ for (const ev of ['touchend', 'touchleave', 'mouseup']) {
 			if (e.touches[0]["force"] > 0) {
 				pressure = e.touches[0]["force"]
 			}
-			x = e.touches[0].pageX * 2
-			y = e.touches[0].pageY * 2
+			x = e.touches[0].pageX * 1.9
+			y = e.touches[0].pageY * 1.9
 		} else {
 			pressure = 1.0
-			x = e.pageX * 2
-			y = e.pageY * 2
+			x = e.pageX * 1.9
+			y = e.pageY * 1.9
 		}
 
 		isMousedown = false
