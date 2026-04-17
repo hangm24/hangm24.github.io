@@ -21,10 +21,12 @@ div {
 </head>
 <body>
 <div>
-	<p id="output"></p>
+	<p id="output1"></p>
+	<p id="output2"></p>
 </div>
 <script>
-	document.getElementById("output").innerText = window.innerWidth + "," + window.innerHeight;
+	document.getElementById("output1").innerText = "Window Size: "+ window.innerWidth + "," + window.innerHeight;
+	document.getElementById("output2").innerText = "Screen Size: "+ screen.width + "," + screen.height;
 </script>
 	
 </body>
