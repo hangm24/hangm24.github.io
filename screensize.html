@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen & Window Size</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .box {
+      display: inline-block;
+      margin: 10px;
+      padding: 20px 30px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Display Size Information</h1>
+
+  <div class="box">
+    <h2>Screen Size</h2>
+    <p id="screenSize"></p>
+  </div>
+
+  <div class="box">
+    <h2>Window Size</h2>
+    <p id="windowSize"></p>
+  </div>
+
+  <script>
+    function updateSizes() {
+      document.getElementById("screenSize").textContent =
+        `${screen.width} × ${screen.height}px`;
+
+      document.getElementById("windowSize").textContent =
+        `${window.innerWidth} × ${window.innerHeight}px`;
+    }
+
+    // Show sizes when the page loads
+    updateSizes();
+
+    // Update whenever the browser window is resized
+    window.addEventListener("resize", updateSizes);
+  </script>
+
+</body>
+</html>
