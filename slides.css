@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans:ital,wght,wdth@0,525,90;0,775,90;1,525,90;1,775,90&family=DM+Sans:ital,wght@0,500;1,500");
+@import url(https://fonts.googleapis.com/css?family=PT+Sans|Boogaloo);
+
+/* Default Setup */
+:root {
+	--broad-width : 980px
+	--broad-height: 560px
+	--font-size : 36px;
+	font-size: var(--font-size);
+	font-family: "Noto Sans", "PT Sans", sans-serif;
+	color: #1D3B4F;
+}
+* {
+	box-sizing: border-box;
+}
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	touch-action: none;
+	/*
+	 * user-select: none;
+	 * -webkit-user-select: none;
+	 */
+	-webkit-touch-callout: none;
+}
+body {
+	display: flex; 
+	align-items: center; 
+	justify-content: center; 
+	overscroll-behavior: none;
+	background: #D3D8E0;
+}
+.container {
+	display: flex;
+	position: relative;
+	width: var(--broad-width);
+	height: var(--broad-height);
+} 
+slides-show {
+	display: flex;
+	position: relative;
+	width: var(--broad-width);
+	height: var(--broad-height);
+	z-index: 0;
+} 
+slide { 
+	pointer-events: none;
+	display: none;
+	width: 100%;
+	height: 100%;
+	padding-top: calc(4px + 1rem);
+	padding-bottom: calc(5px + 1.2rem);
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
+	background: #FFF8F2;
+}
+slide-div {
+	display: block;
+	margin: 0;
+	padding: 0.2rem;
+}
+p {
+	margin: 0.1rem;
+	font-size: 1 rem;
+}
+button,input,textarea,select {
+	font: inherit;
+}
+h1 {
+	margin: 0;
+	padding-bottom: 0.1rem;
+	font-size: 2rem;
+	font-family: "DM Sans", "PT Sans", sans-serif;
+	text-align: center;
+}
+h2 {
+	margin: 0;
+	padding-bottom: 0.1rem;
+	font-size: 1.2rem;
+	font-family: "DM Sans", "PT Sans", sans-serif;
+	text-align: center;
+}
+h3 {
+	margin: 0;
+	padding-bottom: 0.1rem;
+	font-size: 1.05rem;
+	font-family: "DM Sans", "PT Sans", sans-serif;
+}
+
+ul, ol {
+	margin-top: 0.05rem;
+}
+
+li {
+	padding: 0.4rem;	
+}
+
+
+slide.default {
+	grid-template: 1.7rem auto / auto;
+	grid-gap: 0.3rem;
+}
+
+/*
+slide.starter {
+	grid-template-columns: 1.7rem auto auto / auto auto;
+	grid-gap: 0.4rem;
+}
+slide.starter:first-child {
+	grid-template-columns: 10% 90%;
+}
+*/
+
+
+slide.starter {
+	display: grid;
+	grid-template-rows: 1.7rem auto auto;
+	grid-gap: 0.2rem;
+}
+
+div.starterrow {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-gap: 0.2rem;
+}
+
+div.startertitle {
+	display: grid;
+	grid-template-columns: 4.4rem auto 3.4rem;
+	grid-gap: 0.2rem;
+}
+
+mjx-container {
+	display: inline;
+	vertical-align:baseline;
+}
+
+dialogue.mjx-dialog{
+	z-index = 10;
+}
+ltx {
+	font-size: 0.8em;
+}
+ltfr {
+	font-size: 1.1em;
+}

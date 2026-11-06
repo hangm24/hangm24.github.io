@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Whiteboard</title>
+<link rel="stylesheet" href="slides.css">
+<style>
+
+
+/* ============================================================ CANVAS ============================================================ */
+canvas#cvs { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 7; display: block; user-select: none; -webkit-user-select: none;} 
+/* ============================================================ TOOLBAR ============================================================ */
+#statebar {
+	position: fixed;
+	display: flex;
+	justify-content: right;
+	min-width: calc(var(--broad-width)*0.94);
+	left: 50%;
+	top: 0.5%;
+	transform: translateX(-50%);
+	align-items: center;
+	gap: calc(3px + 0.05rem);
+	padding: calc(2px + 0.02rem);
+	padding-right: calc(8px + 0.2rem);
+	background: rgba(153, 187, 238, 0.66);
+	font-family: "Boogaloo", sans-serif;
+	font-size: calc(3px + 0.54rem);
+	color: #452D2F;
+	border-radius: 14px;
+	z-index: 9;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	white-space: nowrap;
+}
+#toolbar {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	min-width: calc(var(--broad-width)*0.94);
+	left: 50%;
+	bottom: 0.8%;
+	transform: translateX(-50%);
+	align-items: center;
+	gap: calc(3px + 0.05rem);
+	padding: calc(3px + 0.05rem);
+	background: rgba(153, 187, 238, 0.82);
+	border-radius: 14px;
+	z-index: 9;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	white-space: nowrap;
+}
+#toobar button,input,textarea,select{ font:inherit; }
+#toolbar button, #toolbar select, #toolbar input{
+	height: calc(24px + 0.16rem);
+	border: none;
+	border-radius: 8px;
+	color: #1D3B4F;
+	font-family: "Noto Sans", "PT Sans", sans-serif;
+	font-size: calc(10px + 0.09rem);
+	cursor: pointer;
+}
+#toolbar button { min-width: 40px; padding: 0 10px; }
+
+
+.page-button { font-size: calc(12px + 0.09rem) !important; font-weight: bold; }
+#pageIndicator { min-width: 50px; color: #452D2F; text-align: center; font-size: calc(13px + 0.12rem); font-weight:bold; }
+
+#toolbar input#commandline { width: calc(40px + 6rem);}
+button.toggleable:before{
+	content: "✖";
+	background-color: #CC5070;
+	font-size: calc(12px + 0.09rem);
+	font-family: sans-serif;
+	padding-top: 0.05rem;
+	padding-bottom: 0.03rem;
+	padding-left: 0.09rem;
+	padding-right: 0.1rem;
+	margin-right: calc(4px + 0.10rem);
+}
+button.toggleable.positive:before{
+	content: "✔";
+	background-color: #50C870;
+	font-size: calc(12px + 0.09rem);
+	font-family: sans-serif;
+	padding-top: 0.05rem;
+	padding-bottom: 0.03rem;
+	padding-left: 0.1rem;
+	padding-right: 0.09rem;
+	margin-right: calc(4px + 0.10rem);
+}
+#addBtn { font-size: 22px !important; font-weight: bold; }
+/* ============================================================ DRAWING CONTROLS ============================================================ */
+#straighten, #undo { font-weight: bold; }
+.tool.active { outline: 3px solid #ffffff; outline-offset: 1px; }
+/* ============================================================ COLOUR ============================================================ */
+#colorPicker { width: calc(24px + 0.16rem); height: calc(24px + 0.16rem); padding: 3px; border: none; border-radius: 8px; cursor: pointer; }
+/* ============================================================ LINE WIDTH ============================================================ */
+</style>
+
+<script>
+	MathJax = {
+		tex: {
+			inlineMath: {'[+]': [['ƒ', 'ƒ']]}
+  		}
+	};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+</head>
+<body> 
+<!-- ========================================================== BOARD ========================================================== -->
+<div id="statebar">
+	<output class="state" id="displayclock" style="float: right;"></output>
+</div>
+<div class="container">
+	<slides-show>
+	<!--SLIDE 00-->
+	<slide class="default">
+		<slide-div step="0"><h2>Retrieval Starter</h2></slide-div>
+		<slide-div step="0">
+			<ol>
+				<li>Write down the fraction of the shaded part</li>
+				<img src="starter.png">
+				<li>Write down 0.5 as a fraction</li>
+				<li>Which one is larger: 0.6 or 0.47?</li>
+			</ol>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Vocabulary Check</h2></slide-div>
+		<slide-div step="0">
+			<ul>
+				<li>I am a type of number.</li>
+				<li>I can be positive, negative or zero.</li>
+				<li>I have no fractional nor decimal part.</li>
+			</ul>
+			<p>What am I?</p>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Percentage and FDP Conversion</h2></slide-div>
+		<slide-div step="1">
+			<ul>
+				<li>Understand that a percentage represents an amount out of 100</li>
+				<li>Represent simple percentages using hundred squares</li>
+				<li>Recognise and convert familiar fractions, decimals and percentages</li>
+			</ul>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>What is Percentage?</h2></slide-div>
+		<slide-div step="1">
+			<p>What does it mean if my bottle has 100% water?</p>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>What is Percentage?</h2></slide-div>
+		<slide-div step="0">
+			<p>A representation of a number out of <b>100</b>.</p>
+                        <span style="float: right;"><img src="Clean.png" style="width:11rem"></span>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mini-Whiteboard</h2></slide-div>
+		<slide-div step="1">
+			<p>37 out of 100 squares has been shaded. Write down the shaded part as a fraction and a percentage.</p>
+                        <span style="float: right;"><img src="Percent37.png" style="width:9rem"></span>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mini-Whiteboard</h2></slide-div>
+		<slide-div step="0">
+			<p>53 out of squares has been shaded. Write down the shaded part as a fraction and a percentage.</p>
+                        <span style="float: right;"><img src="Percent53.png" style="width:9rem"></span>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>In your book, work out the missing values </h2></slide-div>
+		<slide-div step="1">
+                         <center><img src="Slide8.png" style="height:12rem"></center>
+		</slide-div>
+	</slide>
+
+	<slide class="default">
+		<slide-div step="0"><h2>Discussion Point</h2></slide-div>
+		<slide-div step="1">
+			<p>How do we write a half in fraction?</p>
+		</slide-div>
+		<slide-div step="2">
+			<p>How do we write it in percentage?</p>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Discussion Point</h2></slide-div>
+		<slide-div step="1">
+			<p>How do we write a tenth in fraction?</p>
+		</slide-div>
+		<slide-div step="2">
+			<p>How do we write it in percentage?</p>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Discuss and Write on Mini-Whiteboard</h2></slide-div>
+		<slide-div step="1">
+			<h3>In fraction, decimal and percentage, write down</h3>
+			<ol>
+				<li>A fifth</li>
+				<br>
+				<li>A quarter</li>
+			</ol>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mini-Whiteboard</h2></slide-div>
+		<slide-div step="1">
+			<ol>
+				<li>Convert 0.5 into a percentage.</li>
+				<li>Convert <ltfr>\frac{1}{4}</ltfr> into a percentage.</li>
+				<li>Convert 40% into a decimal.</li>
+				<li>Convert <ltfr>\frac{3}{5}</ltfr> into a percentage.</li>
+			</ol>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>6 - 7 Challenge</h2></slide-div>
+		<slide-div step="1">
+			<ul>
+				<li>There are 13 questions</li>
+				<li>6 Multiple Choice and 7 Short Answer Questions</li>
+				<li>Work independently</li>
+				<li>Target: At least 9 Questions. If you have reached the target, raise your hand to let me know.</li>
+				<li>Some multiple choice questions can be more difficult than short answer questions</li>
+			</ul>
+		</slide-div>
+	</slide>
+
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide14.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide15.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide16.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide17.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide18.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide19.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<slide class="default">
+		<slide-div step="0"><h2>Mark your answer with Green Pen</h2></slide-div>
+		<slide-div step="0">
+                         <center><img src="Slide20.png" style="width:20rem"></center>
+		</slide-div>
+	</slide>
+	<!--THE END-->
+	</slides-show>
+
+	<canvas id="cvs" width="980" height="560" inert></canvas>
+
+</div>
+
+<!-- ========================================================== TOOLBAR ========================================================== -->
+<div id="toolbar">
+	<input type="text" id="commandline" placeholder="[Please Enter to Command]" onfocus="this.placeholder=''" onblur="this.placeholder='[Please Enter to Command]'">
+	<span style="width:4px;"></span>
+	<button id="hand" class="tool active">🖐</button>
+	<button id="pencil" class="tool">🖊️</button>
+	<button id="highlighter" class="tool">🖍️</button>
+	<input id="colorPicker" type="color" value="#7b2cbf" title="Choose colour">
+	<select id="widthPicker" title="Line width">
+		<option value="2"> Thin </option>
+		<option value="4" selected> Medium </option>
+		<option value="8"> Thick </option>
+		<option value="14"> Very thick </option>
+		<option value="24"> Extra thick </option>
+	</select>
+	<span style="width:2px;"></span>
+	<button id="previousBtn" class="page-button" title="Previous page"> ‹ </button>
+	<span id="pageIndicator"> 1 / 1 </span>
+	<button id="nextBtn" class="page-button" title="Next page"> › </button>
+	<button id="addBtn" title="Insert page after current page"> + </button>
+	<span style="width:2px;"></span>
+	<button id="undo" title="Undo previous stroke"> ↶ </button>
+	<button id="clear" title="Clear current page">🆑</button>
+	<button class="toggleable" id="stylusBtn">Stylus Only</button>
+</div>
+
+
+
+
+<script> 
+(() => {
+	/* ======================================================== CONSTANTS ======================================================== */
+	const root = document.documentElement;
+	const LOGICAL_WIDTH = 980;
+	const LOGICAL_HEIGHT = 560;
+	const ASPECT_RATIO = LOGICAL_WIDTH / LOGICAL_HEIGHT;
+	/* ======================================================== DOM ======================================================== */
+	const cvs = document.getElementById( "cvs" );
+	const slidesContainer = document.querySelector("slides-show");
+	/*
+	 * IMPORTANT: *
+	 * Do NOT use { alpha: false } here. *
+	 * A normal transparent canvas lets us explicitly paint * the background white during redraw(). */
+	const ctx = cvs.getContext("2d");
+	const fileinput = document.createElement("input");
+	const previousBtn = document.getElementById( "previousBtn" );
+	const nextBtn = document.getElementById( "nextBtn" );
+	const addBtn = document.getElementById( "addBtn" );
+	const pageIndicator = document.getElementById( "pageIndicator" );
+	const undoButton = document.getElementById( "undo" );
+	const clearButton = document.getElementById( "clear" );
+	const handButton = document.getElementById( "hand" );
+	const pencilButton = document.getElementById( "pencil" );
+	const highlighterButton = document.getElementById( "highlighter" );
+	const colorPicker = document.getElementById( "colorPicker" );
+	const widthPicker = document.getElementById( "widthPicker" );
+	let stylusOnly = false;
+	/* ======================================================== PAGES ======================================================== */
+	const pages = [ { strokes: [] } ]; 
+	let currentPage = 0;
+	let currentStep = 0;
+	/* ======================================================== DRAWING STATE ======================================================== */
+	let currentTool = "hand";
+	let drawing = false;
+	let currentStroke = null;
+	/*
+	 * Used to avoid processing the same Apple Pencil stroke * through both Pointer Events and Touch Events. */
+	let activeInput = null;
+	let activePointerId = null;
+
+	/* ======================================================== SLIDE ======================================================== */
+	class SlidesShow extends HTMLElement {
+		//static observedAttributes = ["count"];
+		/*
+		get count() {
+			return Number(this.getAttribute("count") ?? 0);
+		}
+		set count(value) {
+			this.setAttribute("count", String(value));
+		}
+		static getSlide(count) {
+			return document.querySelector(`slide-show[count="${count}"]`);
+		}
+		static getTotalSlides() {
+			return document.querySelectorAll("slide-show").length;
+		}
+		*/
+		getMaxStep(slideid) {
+			const elements = this.children[slideid].querySelectorAll(":scope > slide-div");
+			if (elements.length === 0) {
+				return 0;
+			}
+			return Math.max(...Array.from(elements, el => el.step),0);
+		}
+		displaySlide(slideid,step){
+			const totalSlides =  this.querySelectorAll(":scope > slide").length;
+			for (let i = 0; i < totalSlides; i++){
+				if (i==slideid){
+					this.querySelectorAll(":scope > slide")[i].style.display = "grid";
+					const elements = this.children[slideid].querySelectorAll(":scope > slide-div");
+					for (let j=0; j< elements.length; j++){
+						if (elements[j].step <= step) {
+							elements[j].style.display = "block";
+						} else{
+							elements[j].style.display = "none";
+						}
+					}
+				} else {
+					this.querySelectorAll(":scope > slide")[i].style.display = "none";
+				}
+			}
+		}
+	}
+	class SlideDiv extends HTMLElement {
+		static observedAttributes = ["step"];
+		get step() {
+			return Number(this.getAttribute("step") ?? 0);
+		}
+		set step(value) {
+			this.setAttribute("step", String(value));
+		}
+	}
+	customElements.define("slides-show", SlidesShow);
+	customElements.define("slide-div", SlideDiv);
+	
+
+	/* ======================================================== File Read ======================================================== */
+
+	function initialiseFileRead(){
+		fileinput.type = "file";
+		fileinput.accept = ".html";
+		fileinput.addEventListener("change", evt => {
+			const file = event.target.files[0];
+			var reader = new FileReader();
+			if (file) {
+				reader.readAsText(file);
+			}
+		});
+	}
+
+	/* ======================================================== Run Clock ======================================================== */
+	function runClock() {
+		const clockvar = new Date();
+		let h = clockvar.getHours();
+		let m = clockvar.getMinutes();
+
+		if ( (h === 15) && (m >= 55) && (m <= 59)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else if ( (h === 14) && (m >= 45) && (m <= 54)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else if ( (h === 13) && (m >= 5) && (m <= 9)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else if ( (h === 12) && (m >= 5) && (m <= 9)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else if ( (h === 10) && (m >= 45) && (m <= 49)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else if ( (h === 9) && (m >= 45) && (m <= 49)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else if ( (h == 8) && (m >= 45) && (m <= 49)) {
+			h = checkTime(h);
+			m = checkTime(m);
+			let s = clockvar.getSeconds();
+			s = checkTime(s);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m + ":" + s;
+		} else {
+			h = checkTime(h);
+			m = checkTime(m);
+			document.getElementById('displayclock').innerHTML =  h + ":" + m ;
+		}
+		setTimeout(runClock, 1000);
+	}
+	function checkTime(i) {
+		if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+		return i;
+	}
+
+	/* ======================================================== CANVAS RESOLUTION ======================================================== */
+	function setupCanvasResolution() {
+		const dpr = window.devicePixelRatio || 1;
+		cvs.width = Math.round( LOGICAL_WIDTH * dpr );
+		cvs.height = Math.round( LOGICAL_HEIGHT * dpr );
+		/*
+		 * All application coordinates remain 980 x 560. */
+		ctx.setTransform( dpr, 0, 0, dpr, 0, 0 );
+		ctx.lineCap = "round";
+		ctx.lineJoin = "round";
+	}
+	/* ======================================================== RESPONSIVE BOARD ======================================================== */
+	function resizeBoard() {
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		let height = viewportHeight;
+		let width = height * ASPECT_RATIO;
+		if (width > viewportWidth) {
+			width = viewportWidth; height = width / ASPECT_RATIO;
+		}
+		root.style.setProperty("--broad-width", `${width}px`);
+		root.style.setProperty("--broad-height", `${height}px`);
+		// Scale the background text proportionally with the board
+		const renderedCanvasHeight = height;
+		const scale = renderedCanvasHeight / 560;
+		root.style.setProperty("--font-size", `${32 * scale}px`);
+	}
+	/* ======================================================== PAGE INDICATOR ======================================================== */
+	function updatePageIndicator() {
+		pageIndicator.textContent = `${currentPage + 1} / ${pages.length}`;
+		//previousBtn.disabled = currentPage === 0;
+		//nextBtn.disabled = currentPage === pages.length - 1;
+		previousBtn.style.opacity = previousBtn.disabled ? "0.4" : "1";
+		nextBtn.style.opacity = nextBtn.disabled ? "0.4" : "1";
+	}
+	/* ======================================================== PAGE NAVIGATION ======================================================== */
+	function backward() {
+		if (currentStep > 0) {
+			currentStep--;
+			slidesContainer.displaySlide(currentPage,currentStep);
+		}
+		else if ( currentPage > 0 ) {
+			currentPage--;
+			currentStep = slidesContainer.getMaxStep(currentPage);
+			slidesContainer.displaySlide(currentPage,currentStep);
+			updatePageIndicator();
+			redraw(); 
+		}
+	}
+	previousBtn.addEventListener( "click", () => backward() );
+	function forward() {
+		if (currentStep < slidesContainer.getMaxStep(currentPage)){
+			currentStep++;
+			slidesContainer.displaySlide(currentPage,currentStep);
+		} else if ( currentPage < document.querySelectorAll("slide").length - 1 ) {
+			currentPage++;
+			currentStep = 0;
+			slidesContainer.displaySlide(currentPage,currentStep);
+			updatePageIndicator();
+			redraw(); 
+		}
+	}
+	nextBtn.addEventListener( "click", () => forward() );
+	/* ======================================================== INSERT PAGE AFTER CURRENT ======================================================== */
+	function addPage(){
+		stopDrawing();
+		/*
+		 * Insert rather than append. *
+		 * If current page is 2: *
+		 * 1 | 2 | 3 | 4 * ^ *
+		 * becomes: *
+		 * 1 | 2 | NEW | 3 | 4 */
+		const blankSlide = document.createElement("slide");
+		slidesContainer.insertBefore(blankSlide, slidesContainer.children[currentPage+1]);
+		pages.splice( currentPage + 1, 0, { strokes: [] } );
+		/*
+		 * Move to the new page. */
+		currentPage++;
+		currentStep = 0;
+		slidesContainer.displaySlide(currentPage,currentStep);
+		updatePageIndicator();
+		redraw(); 
+	}
+	addBtn.addEventListener( "click", () => addPage() );
+	/* ======================================================== POINTER COORDINATES ======================================================== */
+	function getCanvasPointFromPointer( event ) {
+		const rect = cvs.getBoundingClientRect();
+		return { x: ( event.clientX - rect.left ) * ( LOGICAL_WIDTH / rect.width ), y: ( event.clientY - rect.top ) * ( LOGICAL_HEIGHT / rect.height ) };
+	}
+	/* ======================================================== TOUCH COORDINATES ======================================================== */
+	function getCanvasPointFromTouch( touch ) {
+		const rect = cvs.getBoundingClientRect();
+		return { x: ( touch.clientX - rect.left ) * ( LOGICAL_WIDTH / rect.width ), y: ( touch.clientY - rect.top ) * ( LOGICAL_HEIGHT / rect.height ) };
+	}
+	/* ======================================================== INPUT TYPE ======================================================== */
+	function isStylusPointer( event ) {
+		if ( event.pointerType ) { return ( event.pointerType === "pencil" ); } return false; 
+	}
+	function isStylusTouch( touch ) {
+		/*
+		 * Modern Safari. */
+		if ( typeof touch.touchType !== "undefined" ) { return ( touch.touchType === "stylus" ); }
+		/* * Fallback for older Safari. */
+		if ( touch.radiusX !== 0 || touch.radiusY !== 0 ) { return false; }
+		return true;
+	}
+	/* ======================================================== INPUT FILTER ======================================================== */
+	function inputIsAllowedPointer( event ) {
+		if ( !stylusOnly ) { return true; }
+		return isStylusPointer( event );
+	}
+	function inputIsAllowedTouch( touch ) {
+		if ( !stylusOnly ) { return true; }
+		return isStylusTouch( touch );
+	}
+	/* ======================================================== START STROKE ======================================================== */
+	function startStroke( point ) {
+		drawing = true;
+		currentStroke = { tool: currentTool, color: colorPicker.value, width: Number( widthPicker.value ), points: [ point ] };
+		/*
+		 * Immediately redraw so even a very short Pencil * touch produces a visible mark. */
+		redraw();
+	}
+	/* ======================================================== ADD POINT ======================================================== */
+	function addPoint( point ) {
+		if ( !drawing || !currentStroke ) { return; }
+		/*
+		 * Avoid storing thousands of virtually identical * points when the Pencil hasn't actually moved. */
+		const points = currentStroke.points;
+		const last = points[ points.length - 1 ];
+		const dx = point.x - last.x;
+		const dy = point.y - last.y;
+		/*
+		 * A very small movement doesn't add useful information. */
+		if ( (dx * dx + dy * dy) < 0.25 ) { return; }
+		points.push(point);
+		/*
+		 * IMPORTANT: *
+		 * We redraw the COMPLETE current stroke rather than * painting independent overlapping curve segments. *
+		 * This is especially important for the highlighter. *
+		 * At a turn, there is now only one continuous path, * so the overlap does not become darker. */
+		redraw();
+	}
+	/* ======================================================== FINISH STROKE ======================================================== */
+	function finishStroke() {
+		if ( !drawing || !currentStroke ) { return; }
+		drawing = false;
+		pages[currentPage].strokes.push( currentStroke );
+		currentStroke = null;
+		ctx.globalAlpha = 1;
+		ctx.lineCap = "round";
+		ctx.lineJoin = "round";
+	}
+	/* ======================================================== STOP DRAWING ======================================================== */
+	function stopDrawing() {
+		drawing = false;
+		currentStroke = null;
+		activeInput = null;
+		activePointerId = null;
+		ctx.globalAlpha = 1;
+		ctx.lineCap = "round";
+		ctx.lineJoin = "round";
+	}
+	/* ======================================================== STROKE STYLE ======================================================== */
+	function applyStrokeStyle( stroke ) {
+		ctx.strokeStyle = stroke.color;
+		ctx.lineWidth = stroke.width;
+		/*
+		 * HIGH LIGHTER *
+		 * Deliberately use ROUND joins and caps. *
+		 * This is closer to the original first version and * avoids the undesirable dark/overlapping corners. */
+		if ( stroke.tool === "pencil" ) {
+			ctx.globalAlpha = 1.0;
+			ctx.lineCap = "round";
+			ctx.lineJoin = "round";
+		} else if ( stroke.tool === "highlighter" ) {
+			ctx.globalAlpha = 0.30;
+			ctx.lineCap = "round";
+			ctx.lineJoin = "round";
+		}
+	}
+	/* ======================================================== DRAW STROKE ======================================================== */
+	function drawStroke( stroke ) {
+		const points = stroke.points;
+		if ( points.length === 0 ) { return; }
+		ctx.save();
+		applyStrokeStyle( stroke );
+		/* * Single point. */
+		if ( points.length === 1 ) { 
+			ctx.beginPath(); 
+			ctx.arc( points[0].x, points[0].y, stroke.width / 2, 0, Math.PI * 2 );
+			ctx.fillStyle = stroke.color;
+			ctx.fill();
+			ctx.restore();
+			return;
+		}
+		/* * Two points. */
+		if ( points.length === 2 ) { 
+			ctx.beginPath(); 
+			ctx.moveTo( points[0].x, points[0].y );
+			ctx.lineTo( points[1].x, points[1].y );
+			ctx.stroke();
+			ctx.restore();
+			return;
+		}
+		/*
+		 * Smooth quadratic path. *
+		 * We calculate midpoints between consecutive points. *
+		 * The entire stroke is rendered as ONE path. */
+		ctx.beginPath();
+		const firstMidX = ( points[0].x + points[1].x ) / 2;
+		const firstMidY = ( points[0].y + points[1].y ) / 2;
+		ctx.moveTo( firstMidX, firstMidY );
+		for ( let i = 1; i < points.length - 1; i++ ) {
+			const point = points[i];
+			const next = points[i + 1];
+			const midpointX = ( point.x + next.x ) / 2;
+			const midpointY = ( point.y + next.y ) / 2;
+			ctx.quadraticCurveTo( point.x, point.y, midpointX, midpointY );
+		}
+		/*
+		 * Finish the path at the final point. */
+		const previous = points[ points.length - 2 ];
+		const last = points[ points.length - 1 ];
+		ctx.quadraticCurveTo( previous.x, previous.y, last.x, last.y );
+		ctx.stroke();
+		ctx.restore();
+	}
+	/* ======================================================== REDRAW ======================================================== */
+	function redraw() {
+		/*
+		 * Explicitly paint the logical canvas WHITE. *
+		 * This fixes the Chrome/Windows black-background * problem. */
+		ctx.save();
+		ctx.globalAlpha = 1;
+		ctx.globalCompositeOperation = "source-over";
+		ctx.clearRect( 0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT );
+		ctx.restore();
+		/*
+		 * Draw completed strokes on current page. */
+		const strokes = pages[currentPage].strokes;
+		for ( const stroke of strokes ) { drawStroke( stroke ); } 
+		/*
+		 * Draw active stroke. *
+		 * This is redrawn as one complete path rather than * repeatedly painting overlapping fragments. */
+		if ( currentStroke ) { drawStroke( currentStroke ); }
+	}
+	/* ======================================================== UNDO ======================================================== */
+	function undo(){
+		const strokes = pages[currentPage].strokes;
+		if ( strokes.length === 0 ) { return; }
+		strokes.pop();
+		redraw();
+	}
+	undoButton.addEventListener( "click", () => undo() );
+	/* ======================================================== CLEAR CURRENT PAGE ======================================================== */
+	function clearPage(){
+		stopDrawing();
+		pages[currentPage].strokes = [];
+		redraw();
+	}
+	clearButton.addEventListener( "click", () => clearPage() );
+	/* ======================================================== TOOL SELECTION ======================================================== */
+	function setTool( tool ) {
+		currentTool = tool;
+		handButton.classList.toggle( "active", tool === "hand" );
+		pencilButton.classList.toggle( "active", tool === "pencil" );
+		highlighterButton.classList.toggle( "active", tool === "highlighter" );
+		/*
+		 * Default colours. */
+		if ( tool === "pencil" ) { colorPicker.value = "#7b2cbf"; widthPicker.value = "4" } else if ( tool === "highlighter" ) { colorPicker.value = "#39a852"; widthPicker.value = "24"}
+	}
+	handButton.addEventListener( "click", () => { setTool("hand"); cvs.inert = true;} );
+	pencilButton.addEventListener( "click", () => { setTool("pencil"); cvs.inert = false;} );
+	highlighterButton.addEventListener( "click", () => { setTool("highlighter"); cvs.inert = false;} );
+	/* ======================================================== STYLUS ONLY ======================================================== */
+	stylusBtn.addEventListener( "click", () => { 
+		/* * Don't leave an existing stroke active if the * input mode changes. */
+		stopDrawing(); 
+		if (stylusBtn.classList.contains("positive")){
+			stylusOnly = false;
+			stylusBtn.classList.remove("positive");
+
+		} else {
+			stylusOnly = true;
+			stylusBtn.classList.add("positive");
+		}
+	});
+	/* ======================================================== POINTER EVENTS ======================================================== */
+	cvs.addEventListener( "pointerdown", event => {
+			if ( currentTool == "hand" ) { return; }
+			/*
+			 * Always suppress Safari/browser default * behaviour first. */
+			event.preventDefault();
+			/*
+			 * Don't process the same physical stroke through * both input systems. */
+			if ( activeInput === "touch" ) { return; }
+			if ( !inputIsAllowedPointer( event ) ) { return; }
+			activeInput = "pointer";
+			activePointerId = event.pointerId;
+			try {
+				cvs.setPointerCapture( event.pointerId ); 
+			} catch (error) {
+				/* * Safe fallback for older Safari. */ 
+			}
+			const point = getCanvasPointFromPointer( event );
+			startStroke( point );
+		}, {
+			passive: false
+		}
+	);
+	cvs.addEventListener( "pointermove", event => {
+			if ( activeInput !== "pointer" ) { return; }
+			if ( event.pointerId !== activePointerId ) { return; }
+			event.preventDefault();
+			const point = getCanvasPointFromPointer( event );
+			addPoint( point );
+		}, {
+			passive: false
+		}
+	);
+	cvs.addEventListener( "pointerup", event => {
+			if ( activeInput !== "pointer" ) { return; }
+			if ( event.pointerId !== activePointerId ) { return; }
+			event.preventDefault();
+			finishStroke();
+			try { 
+				if ( cvs.hasPointerCapture( event.pointerId ) ) {
+					cvs.releasePointerCapture( event.pointerId );
+				} 
+			} catch (error) {
+				/* * Ignore Safari differences. */
+			}
+			activeInput = null;
+			activePointerId = null;
+		}, {
+			passive: false
+		}
+	);
+	cvs.addEventListener( "pointercancel", event => {
+			if ( activeInput !== "pointer" ) { return; }
+			event.preventDefault();
+			finishStroke();
+			activeInput = null;
+			activePointerId = null;
+		}, {
+			passive: false
+		}
+	);
+	/* ======================================================== SAFARI TOUCH EVENTS ======================================================== */
+	cvs.addEventListener( "touchstart", event => {
+			if ( currentTool == "hand" ) { return; }
+			event.preventDefault();
+			/*
+			 * Pointer Events are already handling this stroke. */
+			if ( activeInput === "pointer" ) { return; }
+			if ( !event.touches || event.touches.length === 0 ) { return; }
+			const touch = event.touches[0];
+			if ( !inputIsAllowedTouch( touch ) ) { return; }
+			activeInput = "touch";
+			const point = getCanvasPointFromTouch( touch );
+			startStroke( point );
+		}, {
+			passive: false
+		}
+	);
+	cvs.addEventListener( "touchmove", event => {
+			if ( activeInput !== "touch" ) { return; }
+			event.preventDefault();
+			if ( !event.touches || event.touches.length === 0 ) { return; }
+			const touch = event.touches[0];
+			const point = getCanvasPointFromTouch( touch );
+			addPoint( point );
+		}, {
+			passive: false
+		}
+	);
+	cvs.addEventListener( "touchend", event => {
+			if ( activeInput !== "touch" ) { return; }
+			event.preventDefault();
+			finishStroke();
+			activeInput = null;
+		}, {
+			passive: false
+		}
+	);
+	cvs.addEventListener( "touchcancel", event => {
+			if ( activeInput !== "touch" ) { return; }
+			event.preventDefault();
+			finishStroke();
+			activeInput = null;
+		}, {
+			passive: false
+		}
+	);
+	/* ======================================================== PREVENT BROWSER SELECTION / DRAGGING ======================================================== */
+	cvs.addEventListener( "selectstart", event => { event.preventDefault(); } );
+	cvs.addEventListener( "dragstart", event => { event.preventDefault(); } );
+	cvs.addEventListener( "contextmenu", event => { event.preventDefault(); } );
+	/* ======================================================== RESIZE ======================================================== */
+	window.addEventListener( "resize", () => {
+			resizeBoard();
+			/*
+			 * No stroke coordinates need changing because * they are stored in the 980 x 560 coordinate * system. */
+			redraw();
+		}
+	);
+	document.addEventListener("keydown", (evt) => {
+		if ( evt.target.id === "commandline"){
+			if (evt.keyCode === 13) {
+				if (evt.target.value.startsWith("::showstate")){
+					document.getElementById("statebar").style.display = "flex";
+				} else if (evt.target.value.startsWith("::hidestate")){
+					document.getElementById("statebar").style.display = "none";
+				} else if (evt.target.value.startsWith("::clear")){
+					clearPage();
+				} else if (evt.target.value !== "") {
+					
+				}
+				
+				evt.target.value = "";
+				evt.target.blur();
+
+			}
+
+		} else if ( evt.keyCode === 13) {
+			document.getElementById("commandline").focus();
+		} else if ([34,39,40].includes(evt.keyCode)){
+			forward();
+		}  else if ([33,37,38].includes(evt.keyCode)){
+			backward();
+		}
+
+	});
+	/* ======================================================== ROTATION ======================================================== */
+	window.addEventListener( "orientationchange", () => { requestAnimationFrame( () => { resizeBoard(); redraw(); } ); } );
+	/* ======================================================== INITIALISE ======================================================== */
+	initialiseFileRead();
+	setupCanvasResolution();
+	resizeBoard();
+	runClock();
+
+	const $ltxs = document.querySelectorAll("ltx");
+	const $ltfrs = document.querySelectorAll("ltfr");
+
+	$ltxs.forEach($ltx => $ltx.innerHTML = "ƒ"+ $ltx.innerHTML +"ƒ");
+	$ltfrs.forEach($ltfr => $ltfr.innerHTML = "ƒ"+ $ltfr.innerHTML +"ƒ");
+
+
+	for (let cd = 1; cd < Array.from(document.querySelectorAll("slide")).length; cd++) {
+		pages.push( { strokes: [] } );
+	}
+	slidesContainer.displaySlide(currentPage,currentStep);
+	updatePageIndicator();
+	redraw();
+
+
+})
+();
+</script>
+</body>
+</html>
